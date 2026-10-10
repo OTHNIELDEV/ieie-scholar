@@ -1,20 +1,20 @@
 import Link from 'next/link';
-import { Suspense } from 'react';
-import { SearchBox } from './search-box';
+import { Wordmark } from './wordmark';
+import { DesktopNav, HeaderSearch, MobileMenu } from './header-nav';
+import { ThemeToggle } from './theme-toggle';
 
 export function Header() {
   return (
-    <header className="border-b border-gray-200 dark:border-gray-800 sticky top-0 bg-white/90 dark:bg-gray-950/90 backdrop-blur z-20">
-      <div className="mx-auto max-w-7xl px-4 h-14 flex items-center gap-6">
-        <Link href="/" className="font-bold text-brand-600 whitespace-nowrap">IEIE Scholar</Link>
-        <nav className="hidden md:flex gap-5 text-sm text-gray-600 dark:text-gray-300">
-          <Link href="/venues">간행물</Link>
-          <Link href="/venues?type=conference">학술대회</Link>
-          <Link href="/ai" className="text-brand-600 font-medium">AI 리서치</Link>
-          <Link href="/api-docs">API</Link>
-        </nav>
-        <div className="flex-1 max-w-xl ml-auto"><Suspense><SearchBox compact /></Suspense></div>
-        <Link href="/login" className="text-sm whitespace-nowrap">로그인</Link>
+    <header className="no-print sticky top-0 z-30 border-b border-line bg-paper/85 backdrop-blur-md supports-[backdrop-filter]:bg-paper/75">
+      <div className="container-page relative flex h-16 items-center gap-4 lg:gap-6">
+        <Wordmark />
+        <DesktopNav />
+        <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-2">
+          <HeaderSearch />
+          <ThemeToggle className="hidden lg:inline-flex" />
+          <Link href="/login" className="btn hidden sm:inline-flex">로그인</Link>
+          <MobileMenu />
+        </div>
       </div>
     </header>
   );
