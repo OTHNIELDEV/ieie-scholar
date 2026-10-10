@@ -75,12 +75,12 @@ export default async function PaperPage({ params }: { params: { id: string } }) 
           {p.doi && <a href={`https://doi.org/${p.doi}`} className="num ml-1 text-xs text-muted link-quiet">doi:{p.doi}</a>}
         </div>
 
-        <div className="no-print mt-6 grid grid-cols-2 gap-2 border-y border-line py-4 sm:flex sm:flex-wrap [&>*]:w-full sm:[&>*]:w-auto [&_.btn]:w-full sm:[&_.btn]:w-auto">
+        <div className="no-print mt-6 grid grid-cols-2 gap-2 border-y border-line py-4 sm:flex sm:flex-wrap [&>*]:w-full sm:[&>*]:w-auto [&_.btn]:w-full [&_.btn]:whitespace-nowrap sm:[&_.btn]:w-auto">
           <a href={`/api/v1/papers/${p.id}/pdf`} className="btn-primary"><BookOpen className="h-4 w-4" aria-hidden="true" /> 원문 보기</a>
-          <a href={`/api/v1/papers/${p.id}/pdf?download=1`} className="btn"><Download className="h-4 w-4" aria-hidden="true" /> PDF 내려받기</a>
+          <a href={`/api/v1/papers/${p.id}/pdf?download=1`} className="btn"><Download className="h-4 w-4" aria-hidden="true" /> PDF<span className="hidden sm:inline"> 내려받기</span></a>
           <CitationButton title={p.title_ko ?? p.title_en ?? ''} authors={authors.map((a) => a.raw_name)} venue={p.venue.title_ko}
             year={p.published_at ? Number(p.published_at.slice(0, 4)) : undefined} pages={p.page_start ? `${p.page_start}-${p.page_end}` : undefined} doi={p.doi} url={`${siteUrl}/papers/${p.id}`} />
-          <button className="btn"><FolderPlus className="h-4 w-4" aria-hidden="true" /> 내 서재에 담기</button>
+          <button className="btn"><FolderPlus className="h-4 w-4" aria-hidden="true" /> 내 서재<span className="hidden sm:inline">에 담기</span></button>
           <Link href={`/ai?paper=${p.id}`} className="btn col-span-2 border-signal/50 text-signal hover:border-signal hover:bg-signal/5"><Sparkles className="h-4 w-4" aria-hidden="true" /> 이 논문에 질문하기</Link>
         </div>
 
