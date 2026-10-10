@@ -1,0 +1,2455 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IEIE Scholar — 대한전자공학회 논문 플랫폼 구축 제안서</title>
+<style>
+:root{--bg:#fff;--fg:#1a1d24;--muted:#6b7280;--line:#e5e7eb;--brand:#2b5bd7;--brand-soft:#eef3ff;--code:#f6f7f9;--side:#f9fafb}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1115;--fg:#e6e8ee;--muted:#9aa3b2;--line:#262a33;--brand:#7ea2ff;--brand-soft:#17213a;--code:#171a21;--side:#13161c}}
+*{box-sizing:border-box} html{scroll-behavior:smooth;scroll-padding-top:16px}
+body{margin:0;font-family:Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--fg);line-height:1.65;font-size:15px}
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+nav{position:sticky;top:0;height:100vh;overflow:auto;background:var(--side);border-right:1px solid var(--line);padding:20px 16px}
+nav .brand{font-weight:800;color:var(--brand);font-size:17px;margin-bottom:4px} nav .sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+nav ol{list-style:none;padding:0;margin:0} nav li a{display:block;padding:7px 10px;border-radius:8px;color:var(--fg);text-decoration:none;font-size:13.5px}
+nav li a:hover,nav li a.active{background:var(--brand-soft);color:var(--brand)}
+main{padding:36px 56px;max-width:1100px}
+section{padding-bottom:40px;margin-bottom:40px;border-bottom:1px solid var(--line)}
+.sec-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap} .sec-head h1{margin:0 0 12px;font-size:26px} .src{font-size:12px;color:var(--muted);font-family:ui-monospace,monospace}
+h2{font-size:20px;margin:30px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)} h3{font-size:16px;margin:22px 0 8px} h4{font-size:14.5px;margin:16px 0 6px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.5px} th,td{border:1px solid var(--line);padding:7px 10px;vertical-align:top;text-align:left} th{background:var(--side);font-weight:600}
+.tablewrap{overflow:auto;max-height:70vh;border:1px solid var(--line);border-radius:8px} .tablewrap table{margin:0} .tablewrap th{position:sticky;top:0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:12.5px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+pre{background:var(--code);padding:14px;border-radius:8px;overflow:auto;font-size:12.5px;line-height:1.5} pre code{background:none;padding:0}
+pre.sql{max-height:80vh}
+blockquote{margin:12px 0;padding:8px 14px;border-left:4px solid var(--brand);background:var(--brand-soft);border-radius:0 8px 8px 0}
+.muted{color:var(--muted);font-size:13px} input.filter{margin-left:10px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)}
+summary{cursor:pointer;color:var(--brand);font-weight:600;margin:8px 0}
+.cover{padding:40px 0 10px} .cover h1{font-size:34px;margin:0} .cover p{color:var(--muted)} .cover .meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;margin-top:12px}
+.cover .meta span{background:var(--brand-soft);color:var(--brand);padding:4px 10px;border-radius:999px}
+.toggle{position:fixed;right:16px;top:12px;font-size:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:6px;padding:4px 8px;cursor:pointer;z-index:9}
+.menu{display:none}
+@media(max-width:900px){.layout{grid-template-columns:1fr} nav{position:fixed;left:-300px;width:280px;transition:left .2s;z-index:8} nav.open{left:0} main{padding:20px 16px} .menu{display:block;position:fixed;left:12px;top:12px;z-index:9} .sec-head h1{font-size:22px}}
+@media print{nav,.toggle,.menu,input.filter{display:none} .layout{display:block} main{padding:0;max-width:none} section{break-before:page} section:first-of-type{break-before:auto} .tablewrap{max-height:none;overflow:visible} pre{white-space:pre-wrap}}
+</style></head><body>
+<button class="toggle menu" onclick="document.querySelector('nav').classList.toggle('open')">☰ 목차</button>
+<button class="toggle" onclick="var h=document.documentElement;h.dataset.theme=h.dataset.theme==='dark'?'light':'dark'">🌓</button>
+<div class="layout">
+<nav><div class="brand">IEIE Scholar</div><div class="sub">구축 제안 자료집 · 2026-10-10</div><ol><li><a href='#00_readme'>대한전자공학회(IEIE) 논문 DB 플랫폼 구축 제안 자료집</a></li><li><a href='#01_dbpia_analysis'>01. DBpia(dbpia.co.kr) 정밀 분석</a></li><li><a href='#02_ieie_content_inventory'>02. 대한전자공학회(IEIE) 콘텐츠 현황 및 규모 추정</a></li><li><a href='#03_differentiation_strategy'>03. DBpia 대비 차별화 전략</a></li><li><a href='#04_system_architecture'>04. 시스템 아키텍처 제안</a></li><li><a href='#06_feature_spec'>06. 기능·화면 명세 (IEIE Scholar)</a></li><li><a href='#07_data_pipeline'>07. 데이터 수집·정제·적재 파이프라인</a></li><li><a href='#08_business_model'>08. 비즈니스 모델 · 요금제 제안</a></li><li><a href='#09_roadmap'>09. 구축 로드맵 · 인력 · 비용</a></li><li><a href='#10_sources'>10. 조사 출처</a></li><li><a href='#dbpia_feature_matrix'>부록 A. DBpia vs IEIE Scholar 기능 비교 매트릭스</a></li><li><a href='#ieie_publications'>부록 B. 대한전자공학회 간행물 50종 목록</a></li><li><a href='#05_database_schema'>부록 C. 데이터베이스 스키마 (PostgreSQL / Supabase)</a></li></ol></nav>
+<main>
+<div class="cover"><h1>대한전자공학회 논문 DB 플랫폼<br>구축 제안서</h1><p>dbpia.com 정밀 분석 기반 · 3만 편+ 전자공학 논문 서비스 설계</p>
+<div class="meta"><span>분석 문서 10</span><span>부록 3</span><span>Next.js 14 · Supabase · Vercel · Cloudflare · Claude API</span></div></div>
+<section id='00_readme'><div class='sec-head'><h1>대한전자공학회(IEIE) 논문 DB 플랫폼 구축 제안 자료집</h1><span class='src'>00_README.md</span></div><blockquote>
+<p>작성일: 2026-10-10 | 목적: dbpia.com 정밀 분석을 바탕으로 <strong>3만 편 이상의 대한전자공학회 논문</strong>을 서비스하는 독자 플랫폼(가칭 <strong>IEIE Scholar</strong>) 설계 근거 제공</p>
+</blockquote>
+<h2 id="_1">문서 구성</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>파일</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td><code>01_dbpia_analysis.md</code></td>
+<td>DBpia 서비스 구조·기능·요금·AI·데이터 규모 정밀 분석, 강점/약점</td>
+</tr>
+<tr>
+<td>02</td>
+<td><code>02_ieie_content_inventory.md</code></td>
+<td>대한전자공학회 간행물 현황(50종), 논문 규모 추정, 콘텐츠 분류 체계</td>
+</tr>
+<tr>
+<td>03</td>
+<td><code>03_differentiation_strategy.md</code></td>
+<td>DBpia 대비 차별화 전략 10가지 + 포지셔닝</td>
+</tr>
+<tr>
+<td>04</td>
+<td><code>04_system_architecture.md</code></td>
+<td>기술 아키텍처(Next.js 14 · Supabase · Vercel · Cloudflare · Claude API)</td>
+</tr>
+<tr>
+<td>05</td>
+<td><code>05_database_schema.sql</code></td>
+<td>PostgreSQL/pgvector 스키마 (바로 Supabase 마이그레이션 가능)</td>
+</tr>
+<tr>
+<td>06</td>
+<td><code>06_feature_spec.md</code></td>
+<td>화면·기능 명세 (검색, 논문 상세, AI, 인용, 마이라이브러리, 관리자, Open API)</td>
+</tr>
+<tr>
+<td>07</td>
+<td><code>07_data_pipeline.md</code></td>
+<td>PDF→메타데이터→임베딩 수집/정제/적재 파이프라인</td>
+</tr>
+<tr>
+<td>08</td>
+<td><code>08_business_model.md</code></td>
+<td>요금제·수익모델·B2B 전략</td>
+</tr>
+<tr>
+<td>09</td>
+<td><code>09_roadmap.md</code></td>
+<td>MVP→V1→V2 단계별 로드맵, 인력·비용 추정</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>10_sources.md</code></td>
+<td>조사 출처 목록</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>dbpia_feature_matrix.csv</code></td>
+<td>DBpia vs 제안 플랫폼 기능 비교 매트릭스 (스프레드시트용)</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>ieie_publications.csv</code></td>
+<td>대한전자공학회 간행물 50종 목록 (DBpia 등재 기준)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_2">한 줄 결론</h2>
+<p>DBpia는 <strong>범용 종합 DB(520만 편)</strong> 로서 "넓이"에서는 이길 수 없다. 따라서 승부처는 <strong>(1) 전자공학 도메인 특화 깊이</strong>, <strong>(2) 원문 전체를 활용한 AI 리서치 품질</strong>, <strong>(3) 학회 직영이기에 가능한 가격·개방성(Open Access + 저렴한 API)</strong>, <strong>(4) 저자·연구실·기업 중심의 네트워크 기능</strong> 4가지다.</p>
+<h2 id="_3">권장 읽기 순서</h2>
+<p>01 → 03 → 06 → 04 → 05 → 07 → 08 → 09</p></section><section id='01_dbpia_analysis'><div class='sec-head'><h1>01. DBpia(dbpia.co.kr) 정밀 분석</h1><span class='src'>01_dbpia_analysis.md</span></div><blockquote>
+<p>운영사: ㈜누리미디어 (1997년 서비스 시작) | 조사일: 2026-10-10
+인증: ISMS-P, AWS Activate, KEPA</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 서비스 규모 (공개 수치)</h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>수치</th>
+<th>출처</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>국내 논문</td>
+<td><strong>약 400만 편</strong>(AI검색 기준) / 기관 로그인 팝업 "520만 편"</td>
+<td>AI검색 보도(2025.03), 사이트 팝업</td>
+</tr>
+<tr>
+<td>해외 논문(메타)</td>
+<td>약 2.6억 편 (AI검색 색인)</td>
+<td>보도 2025.03</td>
+</tr>
+<tr>
+<td>학회/발행기관</td>
+<td>약 1,119개 (서지 데이터 제공 학회)</td>
+<td>사이트</td>
+</tr>
+<tr>
+<td>기관 구독</td>
+<td>국내 대학의 90% 이상 구독</td>
+<td>사이트 로그인 안내</td>
+</tr>
+<tr>
+<td>AI 파일럿</td>
+<td>107개 대학 (2025년)</td>
+<td>세계일보 2025.08</td>
+</tr>
+<tr>
+<td>인용 스타일(Citeasy)</td>
+<td>1,119종</td>
+<td>사이트</td>
+</tr>
+<tr>
+<td>논문 단건 가격</td>
+<td><strong>9,000원/편</strong> (열람+다운로드)</td>
+<td>장바구니 예시</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-ia-url">2. 정보 구조(IA) 및 URL 맵</h2>
+<pre><code>/                                  메인 (DBpia Report, 랭킹, BEST, 이슈, 가이드)
+/search/...                        통합검색 (전체/제목/제목+초록/저자/키워드)
+/subject/subjectList?subjCode=     주제별 탐색 (8대 분류 → 하위분야)
+/curation/curationList?bestCode=   BEST 큐레이션 (주간 이용 Top)
+/magazine/magazineList             전문잡지
+/journal/journal-iprd-search       저널/발행기관 찾기 (ㄱ~ㅎ, A~Z, 주제 트리)
+/journal/voisDetail?voisId=        권호(이슈) 상세 — 논문 목록, 일괄 내서재 담기
+/journal/articleDetail?nodeId=     논문 상세
+/mylib/totalNodeList               내 서재
+/b2c-subscription/pay-info         개인 구독
+/member/b2bLogin                   기관 인증 (앱 QR / 도서관 계정 / 대표계정 / IP)
+/notice, /faq, /mypage/inquireWrite 고객센터
+dbpia.ai                           AI 에이전트 (별도 도메인)
+ai.dbpia.co.kr/ko/viewer/          AI 뷰어
+citeasy.dbpia.co.kr                인용관리 도구 (한글/Word 플러그인, Chrome 확장)
+api.dbpia.co.kr/openApi/index.do   Open API (서지 검색)
+</code></pre>
+<h3 id="8">8대 주제 분류</h3>
+<p>인문학 · 사회과학 · 자연과학 · <strong>공학</strong> · 의약학 · 농수해양학 · 예술체육학 · 복합학
+→ 공학 &gt; 전기전자공학 &gt; 전자공학 (대한전자공학회 위치)</p>
+<h3 id="_1">자료 유형 필터</h3>
+<p>학술저널 / 학술대회자료 / 학위논문 / 전문잡지 / 동향보고서 / 연구보고서 / 해외자료</p>
+<hr />
+<h2 id="3">3. 핵심 화면 분석</h2>
+<h3 id="31">3.1 통합검색</h3>
+<ul>
+<li>검색범위: 전체 · 제목 · 제목+초록 · 저자 · 키워드</li>
+<li>모드: <strong>일반검색 / AI검색 / 에이전트검색</strong> 3중 구조</li>
+<li>상세검색: 최대 5개 조건, 필드(제목/저널/발행기관/저자), 주제, ISSN, 언어(한/영/중/일/기타), 원문보유 여부</li>
+<li>보조: 최근 검색어, 인기 검색어, 연도 필터</li>
+<li><strong>약점</strong>: 전자공학 특화 facet(소사이어티, 기술분류, 학술대회 세션, 수상논문)이 없음. 수식·회로·코드 검색 불가.</li>
+</ul>
+<h3 id="32-articledetail">3.2 논문 상세 (articleDetail)</h3>
+<table>
+<thead>
+<tr>
+<th>영역</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기본정보</td>
+<td>저자, 저널, 권호, 발행연도, 페이지, <strong>이용수</strong>, <strong>피인용수</strong></td>
+</tr>
+<tr>
+<td>액션</td>
+<td>인용하기 · 내서재 담기 · 다운받기 · 공유 · 오류신고 · 논문보기 · AI뷰어보기</td>
+</tr>
+<tr>
+<td>초록/키워드</td>
+<td>섹션 앵커</td>
+</tr>
+<tr>
+<td>AI 요약</td>
+<td>한 줄 요약 + "연구방법" 표(배경·목적 / 대상·방법 / 분석·수행 / 결과·의의)</td>
+</tr>
+<tr>
+<td>본문/목차</td>
+<td>번역 선택 + 번역 버튼</td>
+</tr>
+<tr>
+<td>참고문헌 / 피인용 자료</td>
+<td>DBpia 자체 참조 데이터 기반(타 사이트와 상이 가능 고지)</td>
+</tr>
+<tr>
+<td>이용통계</td>
+<td>3년/1년/6개월, 연·월별 표</td>
+</tr>
+<tr>
+<td>저자정보</td>
+<td>저자명 나열 (저자 프로필 페이지 빈약)</td>
+</tr>
+<tr>
+<td>추천</td>
+<td>DBpia Pick!, 함께 본 자료, 최근 본 자료</td>
+</tr>
+<tr>
+<td>댓글</td>
+<td>댓글(0) — 거의 미사용</td>
+</tr>
+<tr>
+<td>SEO 메타</td>
+<td><code>citation_*</code> 메타태그(Google Scholar 호환), OG/Twitter 카드, canonical</td>
+</tr>
+</tbody>
+</table>
+<p><strong>약점</strong>: DOI가 비어있는 경우 다수, 저자 식별(ORCID) 미연계, 피인용 데이터가 자체 범위로 한정, 코드/데이터셋 링크 없음.</p>
+<h3 id="33-voisdetail">3.3 권호 상세 (voisDetail)</h3>
+<ul>
+<li>논문수 표시, 전체 선택 → 일괄 내서재 담기</li>
+<li>저널 내 검색, 이용기간 필터</li>
+<li>사이드바: 같은 발행기관의 저널 50종 나열(단순 목록), 추천논문/함께 다운받은 논문(종종 비어 있음)</li>
+<li><strong>약점</strong>: 학술대회 논문집이 세션/트랙 구조 없이 평면 목록. 1,326편짜리 논문집을 탐색하기 매우 불편.</li>
+</ul>
+<h3 id="34">3.4 저널/발행기관 찾기</h3>
+<ul>
+<li>자음·알파벳 필터 + 주제 트리. 발행기관명이 하이퍼링크가 아니어서 <strong>학회 단위 브랜드 페이지가 사실상 없음</strong>.</li>
+</ul>
+<hr />
+<h2 id="4-ai-20242026">4. AI 기능 (2024~2026 타임라인)</h2>
+<table>
+<thead>
+<tr>
+<th>시기</th>
+<th>기능</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2024.10</td>
+<td><strong>AI뷰어</strong></td>
+<td>목차 기준 요약 / 연구방법 기준 요약 / 쉬운 요약(개념어 정의)</td>
+</tr>
+<tr>
+<td>2024.10</td>
+<td><strong>DBpia IDEA</strong></td>
+<td>논문 주제 추천, 개요 설계, 참고문헌 추천</td>
+</tr>
+<tr>
+<td>2024.10</td>
+<td>탐구활동</td>
+<td>고교생 생기부용 탐구보고서 작성 지원</td>
+</tr>
+<tr>
+<td>2025.03</td>
+<td><strong>AI검색</strong></td>
+<td>질문→핵심어 추출→관련 논문 검색→근거 기반 답변. 인용 논문 목록 + AI 요약 표. 후속 질문 가능. 국내 400만 + 해외 2.6억 색인</td>
+</tr>
+<tr>
+<td>2025.08</td>
+<td>DBpia AI 패키지</td>
+<td>AI검색·AI아이디어·AI뷰어 통합, 기관 구독 상품화 (동국대 등). 107개 대학 파일럿</td>
+</tr>
+<tr>
+<td>2026.01</td>
+<td><strong>AI 에이전트</strong> 정식</td>
+<td>자료유형 필터(저널/잡지/해외), 인용 출처 → 내서재 저장, 월 10회 무료, 기관/연간구독자 무제한, 입력 1,000자 제한</td>
+</tr>
+<tr>
+<td>2026.03</td>
+<td><strong>딥리서치</strong>(베타)</td>
+<td>주제 입력→리서치 계획 자동 수립→대량 검색→<strong>A4 7~10쪽 보고서 초안</strong>, 검색과정 투명 공개. 월 10회 무료</td>
+</tr>
+<tr>
+<td>2026.03</td>
+<td><strong>AI Reader</strong>(베타)</td>
+<td>외부 PDF 업로드 분석: 핵심/노트/튜터 요약, 원문-번역 분할 뷰, 문서 기반 채팅 Q&amp;A(출처 페이지 점프), 범위 외 질문 거부</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ai">AI 구조 추정</h3>
+<ul>
+<li>RAG 기반(질문→키워드 추출→검색→생성), 모델명 비공개</li>
+<li>요약은 사전 생성(배치)으로 보임: "연구방법" 4행 표가 모든 논문에 동일 템플릿</li>
+<li><strong>약점</strong>: 답변 근거가 초록 수준에 머무는 경우 많음(원문 전체 청크 검색 여부 불명확), 수식/그림/표 이해 없음, 도메인 특화 프롬프트 없음, 검증(hallucination guard) 공개 안 됨</li>
+</ul>
+<hr />
+<h2 id="5">5. 요금 체계</h2>
+<h3 id="b2c">개인(B2C)</h3>
+<table>
+<thead>
+<tr>
+<th>상품</th>
+<th>조건</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>단건 구매</td>
+<td>9,000원/편 (열람+다운로드)</td>
+</tr>
+<tr>
+<td>모바일 무료</td>
+<td>로그인 시 하루 2편 무료 열람</td>
+</tr>
+<tr>
+<td>개인 구독</td>
+<td>월/분기 자동결제, 무제한 열람, 7일 내 미사용 시 환불. 가격 비공개(프로모션 변동)</td>
+</tr>
+<tr>
+<td>Premium</td>
+<td>"다운로드 50% 할인", 월 평균 11,200원 절약 홍보</td>
+</tr>
+<tr>
+<td>번들</td>
+<td>밀리의 서재 결합상품</td>
+</tr>
+<tr>
+<td>AI 플랜</td>
+<td>2027년 첫 결제부터 유료 전환 예고. 무료 AI는 월 1일 리셋</td>
+</tr>
+</tbody>
+</table>
+<h3 id="b2b">기관(B2B)</h3>
+<ul>
+<li>대학·연구소·기업 연간 구독(가격 비공개, 규모별 협상)</li>
+<li>인증: 앱 QR/6자리 코드, 도서관 계정, 도서관 홈페이지 경유, 대표계정, IP 대역</li>
+<li>AI 서비스 별도 구독 상품(KERIS, 동국대 등 계약)</li>
+<li>동시접속: 두 번째 기기 로그인 시 첫 세션 강제 로그아웃</li>
+<li>대량 다운로드 시 1시간 차단, 반복 시 영구 차단</li>
+</ul>
+<h3 id="b2b2">데이터 판매(B2B2)</h3>
+<ul>
+<li>AI 학습용 데이터(PDF+메타), 서지 메타데이터(CSV), 이용 랭킹, 키워드 데이터 → marketing@nurimedia.co.kr</li>
+<li><strong>시사점</strong>: 학회가 자체 플랫폼을 가지면 이 데이터 판매 수익을 학회가 직접 가져갈 수 있음</li>
+</ul>
+<hr />
+<h2 id="6">6. 보조 도구</h2>
+<table>
+<thead>
+<tr>
+<th>도구</th>
+<th>특징</th>
+<th>약점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Citeasy</strong></td>
+<td>1,119 인용스타일, 한글/Word 플러그인, RIS/ENW 가져오기, Chrome 확장</td>
+<td>데스크톱 프로그램이 <strong>macOS·모바일 미지원</strong></td>
+</tr>
+<tr>
+<td>내 서재</td>
+<td>폴더, 일괄 담기</td>
+<td>협업 공유 없음</td>
+</tr>
+<tr>
+<td>알림</td>
+<td>키워드 알림 30개, 저널 알림, 검색어 알림</td>
+<td>저자 팔로우 없음</td>
+</tr>
+<tr>
+<td>이용통계</td>
+<td>개인 이용 통계</td>
+<td>연구실/기관 대시보드 약함</td>
+</tr>
+<tr>
+<td>모바일 앱</td>
+<td>iOS/Android, 하루 2편 무료</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Open API</td>
+<td>서지 검색 API (신청제)</td>
+<td>원문·AI 미제공, 문서 빈약</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-swot">7. SWOT 요약</h2>
+<h3 id="_2">강점</h3>
+<ol>
+<li>520만 편 규모의 범용성, 대학 90% 구독의 유통망</li>
+<li>2024~26 AI 기능 빠른 출시(에이전트·딥리서치·Reader)</li>
+<li>Citeasy로 글쓰기 워크플로우 장악</li>
+<li><code>citation_*</code> 메타태그로 Google Scholar 유입 확보</li>
+</ol>
+<h3 id="_3">약점 (= 우리 기회)</h3>
+<ol>
+<li><strong>발행기관 브랜드 부재</strong>: 학회 페이지가 없고 저널이 평면 목록</li>
+<li><strong>학술대회 논문집 UX 열악</strong>: 1,000편+ 논문집이 세션 구조 없이 나열</li>
+<li><strong>저자 식별 미흡</strong>: ORCID 미연계, 동명이인 분리 불가, 저자 프로필 빈약</li>
+<li><strong>인용 네트워크 폐쇄적</strong>: 자체 범위 피인용만, Crossref/OpenAlex 미연동</li>
+<li><strong>도메인 무지</strong>: 수식·회로도·코드·데이터셋 검색/추출 없음</li>
+<li><strong>가격</strong>: 단건 9,000원, AI 유료화 예고 → 학회 회원 입장에서 "내 논문을 돈 주고 보는" 구조</li>
+<li><strong>개방성 부족</strong>: Open API가 서지 한정·신청제, 벌크 데이터는 유료 판매</li>
+<li><strong>커뮤니티 기능 사실상 사망</strong>(댓글 0건), 추천 패널 자주 비어 있음</li>
+<li><strong>Citeasy macOS 미지원</strong>, 협업 기능 없음</li>
+<li>페이지 로딩 시 빈 placeholder 다수(SSR 미흡), 저작권 표기 2022 등 유지보수 흔적</li>
+</ol>
+<h3 id="_4">기회</h3>
+<ul>
+<li>학회 직영 → Open Access 전환·저렴한 API·데이터 라이선스 수익 직접 확보</li>
+<li>전자공학 특화 AI(수식/회로/표 이해, 영문 SCIE 저널 JSTS·SPC 연계)</li>
+<li>산업체(특별회원 골드/실버/브론즈) 대상 기술동향 B2B 상품</li>
+</ul>
+<h3 id="_5">위협</h3>
+<ul>
+<li>DBpia가 이미 대한전자공학회 전체 간행물 50종을 보유·유통 중 → <strong>기존 계약(독점 여부) 확인 필수</strong></li>
+<li>KCI·RISS·KoreaScience·Google Scholar 등 무료 경로 존재 → 메타데이터만으로는 차별화 불가, <strong>원문+AI+커뮤니티</strong>로 가야 함</li>
+</ul></section><section id='02_ieie_content_inventory'><div class='sec-head'><h1>02. 대한전자공학회(IEIE) 콘텐츠 현황 및 규모 추정</h1><span class='src'>02_ieie_content_inventory.md</span></div><blockquote>
+<p>출처: theieie.org, DBpia 발행기관 사이드바(2025 하계학술대회 권호 페이지), KCI</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 학회 개요</h2>
+<ul>
+<li>명칭: 대한전자공학회 (The Institute of Electronics and Information Engineers, <strong>IEIE</strong>)</li>
+<li>6개 소사이어티: <strong>통신 · 반도체 · 컴퓨터 · 인공지능신호처리 · 시스템및제어 · 산업전자</strong></li>
+<li>회원: 개인회원 / 단체회원 / 특별회원(골드·실버·브론즈·베이직 — 기업)</li>
+<li>주요 행사: 하계학술대회(6월), 추계학술대회(11월), ICEIC(1월, 국제), ITC-CSCC(7월, 국제), ICCE-Asia(IEEE 공동), ISOCC(반도체)</li>
+<li>해동일본기술정보센터 운영(일본 기술정보 주간 브리핑) — 산업 콘텐츠 자산</li>
+</ul>
+<h2 id="2">2. 현행 학술지</h2>
+<table>
+<thead>
+<tr>
+<th>학술지</th>
+<th>등재</th>
+<th>언어</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>전자공학회논문지 (J-IEIE)</td>
+<td><strong>KCI 우수등재</strong></td>
+<td>한글</td>
+<td>구 SD/SP/SC/CI/TC/IE 분과지 통합</td>
+</tr>
+<tr>
+<td>JSTS (Journal of Semiconductor Technology and Science)</td>
+<td><strong>SCIE</strong>, SCOPUS, KCI</td>
+<td>영문</td>
+<td>반도체 특화</td>
+</tr>
+<tr>
+<td>IEIE SPC (Transactions on Smart Processing &amp; Computing)</td>
+<td>SCOPUS, KCI</td>
+<td>영문</td>
+<td>신호처리·컴퓨팅</td>
+</tr>
+<tr>
+<td>전자공학회지</td>
+<td>—</td>
+<td>한글</td>
+<td>회지(해설·동향·특집)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-dbpia-50-ieie_publicationscsv">3. DBpia 등재 간행물 50종 (전체 목록은 <code>ieie_publications.csv</code>)</h2>
+<h3 id="31">3.1 분류</h3>
+<table>
+<thead>
+<tr>
+<th>그룹</th>
+<th>간행물</th>
+<th>건수 추정 근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>학술대회 (국내)</td>
+<td>대한전자공학회 학술대회(하계·추계), 심포지엄, 워크샵, 세미나, 토론회, 특별강연회, 특정연구 결과발표회</td>
+<td>2025 하계 <strong>1,326편</strong>, 2025 추계 <strong>458편</strong></td>
+</tr>
+<tr>
+<td>학술대회 (국제)</td>
+<td>ICEIC, ITC-CSCC, JTC-CSCC, ISOCC, ICVC, ICONIP, JC-CNSS, CDMA Intl Conf, TENCON 87, IEEE Region 10, Advanced &amp; Future Microelectronics Workshop</td>
+<td>국제 2~3건/년 × 수백 편</td>
+</tr>
+<tr>
+<td>논문지 (현행)</td>
+<td>전자공학회논문지, JSTS, IEIE SPC</td>
+<td>연 200~400편</td>
+</tr>
+<tr>
+<td>논문지 (구 분과)</td>
+<td>-SD, -SP, -SC, -CI, -TC, -IE, -A, -B, -C, -D, -S, -T, KITE Journal of Electronics Engineering</td>
+<td>1960년대~2010년대 누적</td>
+</tr>
+<tr>
+<td>회지·잡지</td>
+<td>전자공학회지, 전자공학회잡지, 텔레콤, 컴퓨터 기술, CAD 및 VLSI 설계연구회지, JUCT</td>
+<td>해설·동향</td>
+</tr>
+<tr>
+<td>교육·보고서</td>
+<td>단기강좌, 기술강좌, 학술강좌 요약, CAD기술특강, 포럼, 연구보고서, 연구과제, 전기통신학술연구과제, 기타 간행물</td>
+<td>비정형</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32">3.2 규모 추정 (보수적)</h3>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>연간</th>
+<th>누적 가정</th>
+<th>추정 편수</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>하계+추계 학술대회</td>
+<td>~1,800</td>
+<td>최근 15년 고밀도 + 이전 저밀도</td>
+<td>~20,000</td>
+</tr>
+<tr>
+<td>국제학술대회 (ICEIC·ITC-CSCC·ISOCC 등)</td>
+<td>~800</td>
+<td>20년</td>
+<td>~10,000</td>
+</tr>
+<tr>
+<td>논문지(현행+구 분과)</td>
+<td>~300</td>
+<td>50년</td>
+<td>~12,000</td>
+</tr>
+<tr>
+<td>회지·강좌·보고서</td>
+<td>~100</td>
+<td>40년</td>
+<td>~3,000</td>
+</tr>
+<tr>
+<td><strong>합계</strong></td>
+<td></td>
+<td></td>
+<td><strong>약 45,000편</strong></td>
+</tr>
+</tbody>
+</table>
+<p>→ 사용자가 언급한 "3만 편 이상"과 정합. <strong>1차 타깃 3만 편(1990년 이후 학술대회+논문지)</strong>, 2차 확장으로 1960~80년대 아카이브 OCR.</p>
+<h2 id="4">4. 콘텐츠 특성 (설계에 반영)</h2>
+<ol>
+<li><strong>학술대회 비중이 압도적(60%+)</strong> → 세션/트랙/발표유형(구두·포스터)·수상(우수논문) 메타가 핵심. DBpia에는 이 구조가 없음.</li>
+<li><strong>한·영 혼재</strong>: 국내대회 한글, 국제대회·JSTS·SPC 영문 → 이중언어 검색·임베딩 필수.</li>
+<li><strong>반도체·회로 논문</strong>: 수식·회로도·표·측정 결과 중심 → 그림/표 추출과 멀티모달 검색이 차별점.</li>
+<li><strong>구 분과지 체계(SD/SP/SC/CI/TC/IE)</strong>가 현재 6개 소사이어티와 매핑 가능 → 통합 분류 축 설계.</li>
+<li><strong>저자 중복</strong>: 수십 년간 동명이인·소속 이동 → 저자 명확화(disambiguation) 엔진 필요(ORCID·KRI·소속·공저자 그래프).</li>
+<li>학회 자체 자산: 웹진, 서울IT포럼 강연자료, 표준화백서, 해동 일본기술정보 → DBpia에 없는 <strong>독점 콘텐츠</strong>로 묶어 가치 상승.</li>
+</ol>
+<h2 id="5">5. 권리 확인 체크리스트 (착수 전 필수)</h2>
+<ul>
+<li>[ ] 누리미디어(DBpia)와의 기존 전송권 계약: 독점/비독점, 기간, 해지 조항</li>
+<li>[ ] KISS·교보스콜라·KoreaScience 등 중복 유통 계약</li>
+<li>[ ] 저자 저작권 양도/이용허락 범위(AI 학습·요약·번역 허용 여부 — 2020년 이전 양도서에는 AI 조항 없음)</li>
+<li>[ ] JSTS·SPC 국제 유통(Scopus/SCIE 색인 유지 조건, DOI 등록기관 Crossref 회원 여부)</li>
+<li>[ ] 원본 PDF 보유 현황(학회 자체 vs DBpia 디지털화본) 및 포맷(스캔본 비율)</li>
+</ul></section><section id='03_differentiation_strategy'><div class='sec-head'><h1>03. DBpia 대비 차별화 전략</h1><span class='src'>03_differentiation_strategy.md</span></div><blockquote>
+<p>전제: 넓이(520만 편)로는 못 이김. <strong>깊이 · AI 품질 · 개방성 · 네트워크</strong> 4축으로 "전자공학 연구자가 매일 여는 첫 화면"을 목표.</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 포지셔닝</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>DBpia</th>
+<th>IEIE Scholar(제안)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>정체성</td>
+<td>범용 학술 유통 플랫폼</td>
+<td><strong>전자공학 도메인 연구 OS</strong></td>
+</tr>
+<tr>
+<td>콘텐츠</td>
+<td>1,119개 학회 메타+원문</td>
+<td>IEIE 50종 원문 + 학회 독점자산(웹진·포럼·표준화백서·일본기술정보)</td>
+</tr>
+<tr>
+<td>사용자</td>
+<td>대학생~연구자 전반, 고교생</td>
+<td>전자공학 연구자·대학원생·반도체/통신 기업 엔지니어</td>
+</tr>
+<tr>
+<td>수익</td>
+<td>기관구독+단건+데이터판매</td>
+<td>회원 무료 + 기업 B2B + API/데이터 라이선스 + 학술대회 연동</td>
+</tr>
+<tr>
+<td>AI</td>
+<td>초록 기반 RAG 요약/검색</td>
+<td><strong>원문 전체(그림·표·수식 포함) 멀티모달 RAG</strong> + 도메인 프롬프트</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-10">2. 차별화 10대 전략</h2>
+<h3 id="1-dbpia">① 학술대회 중심 구조화 (DBpia 최대 약점 공략)</h3>
+<ul>
+<li>논문집을 <strong>대회 → 트랙/소사이어티 → 세션 → 발표(구두/포스터)</strong> 트리로 제공</li>
+<li>세션 체어, 발표 시간, 발표 슬라이드/포스터 PDF, 우수논문상 배지</li>
+<li>대회 개최 전 "프로그램북 = 플랫폼" 으로 전환 → 참가자가 현장에서 플랫폼을 쓰게 만들어 <strong>트래픽을 학회 행사와 결합</strong></li>
+<li>효과: 연 1,800편이 <strong>발표 당일</strong> 서비스 (DBpia는 수주~수개월 지연)</li>
+</ul>
+<h3 id="2">② 저자 아이덴티티 &amp; 연구실 페이지</h3>
+<ul>
+<li>저자 명확화 엔진(ORCID · KRI · 소속 · 공저자 그래프 · 이메일 도메인)</li>
+<li>저자 프로필: h-index(자체+OpenAlex), 연도별 발표, 소사이어티 활동, 수상, 공저자 네트워크 그래프</li>
+<li><strong>연구실(Lab) 페이지</strong>: 교수 + 소속 학생 논문 자동 묶음, 대학원 진학 희망자·채용 기업의 핵심 탐색 경로</li>
+<li>저자 클레임(본인 인증) → 본인 논문 Open Access 전환·Preprint 업로드 권한</li>
+</ul>
+<h3 id="3">③ 인용 네트워크 개방 연동</h3>
+<ul>
+<li>Crossref · OpenAlex · Semantic Scholar · KCI 인용 데이터 통합 → DBpia의 "자체 범위 피인용" 한계 극복</li>
+<li>인용 문맥(citation context) 추출: "이 논문이 어떤 문장에서 인용됐는가"</li>
+<li>역방향: IEIE 논문이 IEEE/SCIE 논문에 인용된 경우 추적 → 학회 성과 홍보 자료 자동 생성</li>
+</ul>
+<h3 id="4-ai">④ 전자공학 특화 멀티모달 AI</h3>
+<table>
+<thead>
+<tr>
+<th>기능</th>
+<th>설명</th>
+<th>DBpia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>그림/표 검색</td>
+<td>"28nm CMOS LNA 측정 결과 표", "FinFET 단면도" → 추출된 Figure/Table 단위 검색</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>수식 검색</td>
+<td>LaTeX/MathML 인덱싱, 수식 유사 검색</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>스펙 테이블 비교</td>
+<td>여러 논문의 성능표(전력, 면적, 주파수, SNR 등)를 자동 정규화해 비교표 생성</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>코드/데이터셋 링크</td>
+<td>GitHub, IEEE DataPort, 공개 데이터셋 자동 연결</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>영↔한 기술 번역</td>
+<td>전자공학 용어집(학회 표준용어) 기반 번역</td>
+<td>범용 번역</td>
+</tr>
+<tr>
+<td>리뷰어 모드</td>
+<td>투고 논문 vs 기존 논문 유사도·신규성 사전 점검(투고 시스템 연계)</td>
+<td>✗</td>
+</tr>
+<tr>
+<td>딥리서치</td>
+<td>원문 청크 기반, 수식·표 인용 포함 보고서, 출처 페이지 좌표 표시</td>
+<td>초록 수준</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-open-access-api">⑤ Open Access + 회원 무료 + 저렴한 API</h3>
+<ul>
+<li>학회 회원: 전 논문 무료(회비에 포함) → <strong>"내 논문 9,000원 주고 보기" 구조 해체</strong></li>
+<li>비회원: 학술대회 논문 무료 공개(Diamond OA), 논문지 엠바고 12개월 후 공개 검토</li>
+<li>Open API: 서지 <strong>무제한 무료</strong>, 원문·AI는 저렴한 종량제(토큰/건당) → 스타트업·연구실 유입</li>
+<li>효과: Google Scholar·OpenAlex 색인 확대 → 인용 증가 → 학회 저널 영향력 상승이라는 선순환</li>
+</ul>
+<h3 id="6-b2b">⑥ 기업 B2B 기술동향 상품</h3>
+<ul>
+<li>특별회원(삼성·SK하이닉스·LG 등 골드/실버/브론즈) 대상 <strong>기술 레이더 대시보드</strong>: 키워드 트렌드, 신규 연구실, 경쟁사 발표 추적, 주간 AI 브리핑(해동 일본기술정보 포함)</li>
+<li>채용 연계: 연구실 페이지 → 기업 리크루팅(인재 탐색 라이선스)</li>
+</ul>
+<h3 id="7">⑦ 커뮤니티 &amp; 네트워크</h3>
+<ul>
+<li>논문 단위 Q&amp;A(저자 답변 배지), 세션 토론 스레드, 학술대회 미팅 매칭</li>
+<li>발표 영상/슬라이드 업로드, 포스터 세션 가상 전시</li>
+<li>DBpia 댓글은 사실상 0건 → "저자가 상주하는" 커뮤니티로 차별</li>
+</ul>
+<h3 id="8">⑧ 글쓰기·투고 워크플로우 일체화</h3>
+<ul>
+<li>웹 기반 인용 관리(macOS·모바일 지원 — Citeasy 약점), 학회 템플릿(한글·LaTeX·Word) 자동 서식</li>
+<li>투고 시스템(JAMS 등)과 연동: 플랫폼에서 참고문헌 수집 → 투고 → 심사 → 게재 → 자동 등재</li>
+<li>Zotero/Mendeley/Obsidian 커넥터, BibTeX/RIS 내보내기</li>
+</ul>
+<h3 id="9">⑨ 데이터 주권 &amp; 리서치 인프라</h3>
+<ul>
+<li>학회가 <strong>직접</strong> AI 학습 데이터 라이선스 판매(DBpia가 가져가던 수익 회수)</li>
+<li>연구자용 벌크 다운로드(메타+임베딩) 데이터셋 공개 → 학계 레퍼런스 데이터셋화</li>
+<li>DOI 100% 등록(Crossref), ORCID 연동, OpenAlex 공급 → 국제 가시성</li>
+</ul>
+<h3 id="10-ux">⑩ 성능·UX</h3>
+<ul>
+<li>SSR/ISR로 즉시 렌더(DBpia의 빈 placeholder 문제 회피), Core Web Vitals 90+</li>
+<li>검색 응답 &lt; 200ms (Typesense/Meilisearch + pgvector 하이브리드)</li>
+<li>모바일 우선, 다크모드, 키보드 내비게이션, PWA 오프라인 읽기</li>
+<li>접근성(WCAG 2.1 AA), 영문 UI 완전 지원(국제대회·해외 연구자)</li>
+</ul>
+<hr />
+<h2 id="3_1">3. "하지 말아야 할 것"</h2>
+<ol>
+<li>1,119개 학회 전체를 모으려는 시도(범용화) — 전자공학 깊이에 집중</li>
+<li>단건 유료 판매 중심 모델 — 회원·기관·기업·API로 수익 구조 이동</li>
+<li>범용 챗봇 수준 AI — 근거 없는 답변은 도메인 신뢰를 즉시 파괴</li>
+<li>데스크톱 전용 도구(Citeasy 전철) — 웹/모바일 우선</li>
+</ol>
+<h2 id="4-kpi">4. 성공 지표(KPI) 제안</h2>
+<table>
+<thead>
+<tr>
+<th>지표</th>
+<th>12개월 목표</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>등재 논문</td>
+<td>30,000편 (원문 PDF + 추출 메타 100%)</td>
+</tr>
+<tr>
+<td>DOI 등록률</td>
+<td>95%+</td>
+</tr>
+<tr>
+<td>저자 클레임 프로필</td>
+<td>3,000명</td>
+</tr>
+<tr>
+<td>학술대회 당일 등재율</td>
+<td>100% (하계·추계)</td>
+</tr>
+<tr>
+<td>MAU</td>
+<td>20,000 (회원 + 비회원)</td>
+</tr>
+<tr>
+<td>AI 질의 월간</td>
+<td>50,000건, 근거 인용 정확도(샘플 평가) 90%+</td>
+</tr>
+<tr>
+<td>B2B 기업 구독</td>
+<td>10개사</td>
+</tr>
+<tr>
+<td>API 키 발급</td>
+<td>300개</td>
+</tr>
+</tbody>
+</table></section><section id='04_system_architecture'><div class='sec-head'><h1>04. 시스템 아키텍처 제안</h1><span class='src'>04_system_architecture.md</span></div><blockquote>
+<p>기술 스택 전제: <strong>Next.js 14 (App Router) · Supabase (Postgres + pgvector + Auth + Storage) · Vercel · Cloudflare · Claude API</strong> — 기존 ExitWise 인프라와 동일 계열로 운영 비용·학습 곡선 최소화</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 전체 구성도</h2>
+<pre><code>┌───────────────────────────── Cloudflare ─────────────────────────────┐
+│  DNS · WAF · Bot 차단 · R2(원문 PDF/Figure 이미지, 무료 egress)       │
+│  Workers(PDF 서명 URL, 다운로드 쿼터 체크) · Turnstile(봇 방지)       │
+└──────────────────────┬───────────────────────────────────────────────┘
+                       │
+        ┌──────────────▼───────────────┐        ┌──────────────────────┐
+        │  Vercel — Next.js 14         │        │  검색 엔진            │
+        │  · RSC/SSR/ISR 페이지         │◄──────►│  Typesense Cloud      │
+        │  · Route Handlers (/api)      │        │  (한/영 형태소·오타·   │
+        │  · Edge Middleware(인증/IP)   │        │   facet·동의어)        │
+        │  · Streaming AI UI            │        └──────────────────────┘
+        └──────────────┬───────────────┘
+                       │
+        ┌──────────────▼──────────────────────────────────────────────┐
+        │  Supabase                                                    │
+        │  · Postgres 16 + pgvector(HNSW) — 서지·저자·인용·청크 임베딩 │
+        │  · Auth (이메일/소셜/ORCID OIDC/기관 SSO-SAML)              │
+        │  · Storage (업로드 임시), Realtime(알림), Edge Functions     │
+        │  · RLS로 기관/구독 권한 제어                                  │
+        └──────────────┬──────────────────────────────────────────────┘
+                       │
+        ┌──────────────▼──────────────────────────────────────────────┐
+        │  AI 레이어                                                   │
+        │  · Claude API (Sonnet: 요약/QA/딥리서치, Haiku: 분류/추출)   │
+        │  · 임베딩: Voyage AI(voyage-3-large, 다국어) 또는 bge-m3     │
+        │  · Rerank: Cohere Rerank v3 / voyage-rerank                  │
+        │  · 프롬프트 캐시 + 배치 API로 비용 절감                       │
+        └──────────────┬──────────────────────────────────────────────┘
+                       │
+        ┌──────────────▼──────────────────────────────────────────────┐
+        │  데이터 파이프라인 (Python, 별도 워커 — Railway/Fly.io/GCP)  │
+        │  · PDF 파싱(GROBID + marker/Docling + OCR)                   │
+        │  · Figure/Table/수식 추출, 참고문헌 파싱 → Crossref 매칭     │
+        │  · 저자 명확화, DOI 등록, OpenAlex 동기화                     │
+        │  · 큐: Supabase pgmq 또는 Upstash QStash                     │
+        └─────────────────────────────────────────────────────────────┘
+</code></pre>
+<h2 id="2">2. 레이어별 설계</h2>
+<h3 id="21-nextjs-14">2.1 프론트엔드 (Next.js 14)</h3>
+<table>
+<thead>
+<tr>
+<th>영역</th>
+<th>선택</th>
+<th>이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>렌더링</td>
+<td>논문 상세·권호·저자 페이지 = <strong>ISR(revalidate 1h)</strong>, 검색 = SSR + 클라이언트 스트리밍</td>
+<td>SEO + 즉시 렌더 (DBpia placeholder 문제 회피)</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>Tailwind + shadcn/ui, Radix</td>
+<td>접근성 기본 확보</td>
+</tr>
+<tr>
+<td>상태</td>
+<td>TanStack Query, nuqs(URL 검색 상태)</td>
+<td>검색 필터 공유 가능 링크</td>
+</tr>
+<tr>
+<td>AI UI</td>
+<td>Vercel AI SDK <code>streamText</code> + 인용 카드 컴포넌트</td>
+<td>토큰 스트리밍</td>
+</tr>
+<tr>
+<td>수식</td>
+<td>KaTeX, 그림 뷰어 = react-pdf + 자체 Figure 갤러리</td>
+<td></td>
+</tr>
+<tr>
+<td>국제화</td>
+<td>next-intl (ko/en)</td>
+<td>국제대회·JSTS</td>
+</tr>
+<tr>
+<td>SEO</td>
+<td><code>citation_*</code> 메타태그(Google Scholar), JSON-LD ScholarlyArticle, sitemap 분할(5만 URL/파일)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="22">2.2 검색 (하이브리드)</h3>
+<pre><code>질의 → [Typesense BM25 + facet] ─┐
+                                   ├─ RRF 융합 → Rerank(top 50→10) → 결과
+질의 → [pgvector 코사인 top 100] ──┘
+</code></pre>
+<ul>
+<li>Typesense 스키마: title_ko, title_en, abstract, keywords, authors, affiliation, venue, year, society, session, has_fulltext, awards</li>
+<li>동의어 사전: 학회 표준용어(예: "FinFET ↔ 핀펫", "LNA ↔ 저잡음증폭기")</li>
+<li>임베딩 단위: 논문 요약 1벡터 + 본문 청크(~800토큰) N벡터 + Figure 캡션 벡터</li>
+<li>대안: pgvector만으로 시작(3만 편 × 30청크 = 90만 벡터, HNSW로 충분) → 트래픽 증가 시 Typesense 추가</li>
+</ul>
+<h3 id="23-ai">2.3 AI 기능 구현 패턴</h3>
+<table>
+<thead>
+<tr>
+<th>기능</th>
+<th>파이프라인</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>논문 요약(4종)</td>
+<td>배치 API로 사전 생성 → <code>paper_summaries</code> 캐시. 모델: Claude Sonnet, 프롬프트 캐시로 본문 재사용</td>
+</tr>
+<tr>
+<td>AI 검색/QA</td>
+<td>하이브리드 검색 top 10 청크 → Claude에 근거 삽입 → 인용 ID 강제 출력(JSON) → 프론트에서 인용 카드 매핑. 근거 없는 문장 생성 금지 지시</td>
+</tr>
+<tr>
+<td>딥리서치</td>
+<td>계획 수립(Haiku) → 다중 검색(병렬) → 섹션별 작성(Sonnet) → 검증 패스(인용 ID 존재 확인) → 보고서(Markdown/DOCX)</td>
+</tr>
+<tr>
+<td>스펙 비교표</td>
+<td>추출된 Table → 정규화 스키마(metric, value, unit, condition) → 사용자 선택 논문 교차표</td>
+</tr>
+<tr>
+<td>리뷰어 모드</td>
+<td>업로드 PDF → 임베딩 → 유사 논문 top 20 + 신규성 코멘트</td>
+</tr>
+<tr>
+<td>번역</td>
+<td>용어집 주입 프롬프트, 문단 단위 캐시</td>
+</tr>
+</tbody>
+</table>
+<p>비용 가드: 사용자별 월 토큰 쿼터, 캐시 적중률 모니터링, Haiku 우선 라우팅.</p>
+<h3 id="24">2.4 인증·권한</h3>
+<ul>
+<li>Supabase Auth: 이메일, Google, <strong>ORCID OIDC</strong>, 기관 SSO(SAML — 대학 도서관), IP 대역 인증(Edge Middleware에서 <code>institution_ip_ranges</code> 조회)</li>
+<li>RLS 정책: <code>papers</code>는 공개, <code>fulltext_files</code> 접근은 <code>can_access_fulltext(user, paper)</code> 함수(OA 여부·회원·기관·구매 체크)</li>
+<li>원문 다운로드: Cloudflare Worker가 서명 URL(10분) 발급 + 쿼터/속도 제한</li>
+</ul>
+<h3 id="25">2.5 저장소</h3>
+<table>
+<thead>
+<tr>
+<th>데이터</th>
+<th>위치</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>원문 PDF, 추출 Figure PNG, 썸네일</td>
+<td>Cloudflare R2 (<code>papers/{id}/fulltext.pdf</code>, <code>figures/{id}/{n}.png</code>)</td>
+</tr>
+<tr>
+<td>서지·관계·임베딩</td>
+<td>Supabase Postgres</td>
+</tr>
+<tr>
+<td>검색 인덱스</td>
+<td>Typesense (Postgres가 원본, 변경 시 재색인 트리거)</td>
+</tr>
+<tr>
+<td>로그·분석</td>
+<td>Supabase <code>events</code> 파티션 테이블 → 월별 집계 → 필요 시 ClickHouse/Tinybird</td>
+</tr>
+</tbody>
+</table>
+<h3 id="26">2.6 관측·운영</h3>
+<ul>
+<li>Vercel Analytics + Sentry, Supabase 로그, Cloudflare Analytics</li>
+<li>비용 추정(3만 편, MAU 2만 기준): Vercel Pro ~$20–150, Supabase Pro ~$25–100, R2 ~$5(100GB), Typesense ~$50, Claude API ~$300–1,500/월(캐시·배치 적용 시) → <strong>월 $500–2,000</strong></li>
+</ul>
+<h2 id="3">3. 보안·컴플라이언스</h2>
+<ul>
+<li>ISMS-P 준비(DBpia 보유): 접근통제, 로그 보관 1년, 개인정보 암호화(pgcrypto)</li>
+<li>대량 다운로드 탐지(사용자·IP별 레이트 리밋, 봇 Turnstile)</li>
+<li>저작권: 원문 워터마크(다운로드자 이메일 삽입, pdf-lib)</li>
+<li>백업: Supabase PITR + R2 버전 관리</li>
+</ul>
+<h2 id="4-web">4. 디렉터리 구조 제안 (<code>web/</code>)</h2>
+<pre><code>web/
+  app/
+    (public)/            홈, 검색, 논문, 권호, 저널, 저자, 연구실, 학술대회
+    (member)/            내서재, 알림, 프로필 클레임, AI 워크스페이스
+    (admin)/             인제스트 큐, 메타 교정, 권한, 통계
+    api/
+      v1/                Open API (search, papers, authors, citations)
+      ai/                stream 핸들러
+  components/
+  lib/
+    search/              typesense + pgvector 클라이언트, RRF
+    ai/                  프롬프트, 툴, 인용 검증
+    db/                  supabase 타입(generated), 쿼리
+  supabase/
+    migrations/          05_database_schema.sql 기반
+    functions/           edge functions
+pipeline/                Python 워커 (07_data_pipeline.md)
+</code></pre></section><section id='06_feature_spec'><div class='sec-head'><h1>06. 기능·화면 명세 (IEIE Scholar)</h1><span class='src'>06_feature_spec.md</span></div><blockquote>
+<p>범례: <strong>[P0]</strong> MVP 필수 · <strong>[P1]</strong> V1 · <strong>[P2]</strong> V2 | ★ = DBpia 대비 차별 기능</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 사이트맵</h2>
+<pre><code>/                         홈
+/search                   통합검색 (q, type, year, society, venue, session, oa, has_fig …)
+/papers/[id]              논문 상세
+/papers/[id]/figures      ★ 그림·표·수식 갤러리
+/papers/[id]/ai           ★ 논문 AI 워크스페이스 (요약·QA·번역)
+/venues                   간행물 목록 (저널 / 학술대회 / 회지)
+/venues/[slug]            간행물 홈 (권호 목록, 소개, 투고안내, 통계)
+/venues/[slug]/[issue]    권호·대회 상세 ★ 세션 트리
+/conferences/[slug]/[year]/program   ★ 프로그램북 (시간표·장소·세션)
+/authors/[id]             ★ 저자 프로필 (논문·공저자 그래프·h-index·클레임)
+/labs/[slug]              ★ 연구실 페이지
+/organizations/[id]       기관 페이지
+/societies/[code]         ★ 소사이어티 허브 (세부분야·최신논문·행사)
+/subjects/[code]          기술분류 탐색
+/trends                   ★ 키워드·기술 트렌드 대시보드
+/ai                       ★ AI 리서치 (검색·딥리서치·비교·리뷰어)
+/library                  내 서재 (폴더·공유·노트·태그)
+/alerts                   팔로우·알림
+/cite                     ★ 웹 인용관리 (BibTeX/RIS/APA/IEEE, 학회 템플릿)
+/api-docs                 Open API 문서 (OpenAPI 3.1)
+/admin/*                  관리자
+/about, /pricing, /help
+</code></pre>
+<hr />
+<h2 id="2">2. 화면별 명세</h2>
+<h3 id="21-p0">2.1 홈 [P0]</h3>
+<ul>
+<li>검색창(일반/AI 토글, 자동완성: 논문·저자·키워드·간행물)</li>
+<li>이번 주 BEST, 신규 등재, <strong>다가오는 학술대회(D-day + 프로그램 링크)</strong>, 소사이어티별 최신 논문 탭</li>
+<li>학회 독점 콘텐츠 영역: 웹진, 서울IT포럼, 해동 일본기술정보 ★</li>
+<li>로그인 시: 팔로우 기반 피드, 미열람 알림</li>
+</ul>
+<h3 id="22-p0">2.2 통합검색 [P0]</h3>
+<table>
+<thead>
+<tr>
+<th>요소</th>
+<th>명세</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>모드</td>
+<td>키워드(BM25+벡터 하이브리드) / AI 답변(근거 인용)</td>
+</tr>
+<tr>
+<td>범위</td>
+<td>전체 · 제목 · 초록 · 저자 · 키워드 · <strong>본문(원문 청크)</strong> ★ · <strong>그림/표 캡션</strong> ★</td>
+</tr>
+<tr>
+<td>Facet</td>
+<td>자료유형, 연도(범위 슬라이더), 소사이어티, 간행물, 세션/트랙 ★, 언어, OA 여부, 수상 ★, 원문 유형(born-digital/OCR), 코드 공개 ★</td>
+</tr>
+<tr>
+<td>정렬</td>
+<td>관련도 · 최신 · 피인용 · 이용수</td>
+</tr>
+<tr>
+<td>결과 카드</td>
+<td>제목(한/영), 저자(링크), 소속, 간행물·연도, 한 줄 AI 요약, 키워드 칩, 배지(OA/수상/코드), 액션(서재·인용·PDF)</td>
+</tr>
+<tr>
+<td>보조</td>
+<td>동의어·오타 교정, "검색 결과 저장→알림", URL 공유 가능 상태</td>
+</tr>
+<tr>
+<td>상세검색</td>
+<td>조건 5개 이상, 불리언, 필드 지정, ISSN, DOI</td>
+</tr>
+<tr>
+<td>성능</td>
+<td>p95 &lt; 300ms (Typesense)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-p0">2.3 논문 상세 [P0]</h3>
+<ol>
+<li>헤더: 제목(한/영), 저자(+ORCID 아이콘, 소속, 교신저자 표시), 간행물·권호·페이지, DOI, 발표 세션/일시 ★, 수상 배지 ★</li>
+<li>액션 바: PDF 보기(인앱 뷰어) · 다운로드 · 인용(APA/IEEE/BibTeX/RIS/한글 각주) · 서재 담기 · 공유 · 오류신고 · <strong>AI 워크스페이스 열기</strong> ★</li>
+<li>탭: 초록/키워드 · AI 요약(한줄/목차/연구방법/쉬운/영문) · <strong>그림·표·수식</strong> ★ · 참고문헌(DOI 링크, 내부 논문 연결) · 피인용(내부+Crossref+OpenAlex, 인용 문맥 표시 ★) · 이용 통계 · 토론 ★</li>
+<li>사이드: 유사 논문(벡터), 같은 세션 논문 ★, 같은 연구실 논문 ★, 코드/데이터셋 링크 ★, 메트릭(조회·다운로드·인용)</li>
+<li>SEO: <code>citation_*</code> 메타, JSON-LD, OG 이미지(제목+저자 자동 생성)</li>
+<li>접근 제어: OA → 즉시, 회원/기관 → 인증 후, 비회원 → 미리보기 2쪽 + 구매/회원가입 유도</li>
+</ol>
+<h3 id="24-p0">2.4 권호·학술대회 상세 [P0] ★</h3>
+<ul>
+<li>학술대회: <strong>트랙 → 세션 → 논문</strong> 트리, 시간표 뷰(일자별), 장소 맵, 세션 체어, 발표 유형 아이콘</li>
+<li>저널: 권호 목록, 특집호 표시, 편집위원</li>
+<li>일괄 작업: 전체/세션 선택 → 서재 담기 · RIS 내보내기 · ZIP 다운로드(권한 시)</li>
+<li>통계: 논문수, 소사이어티 분포 차트, 참여 기관 Top 10</li>
+</ul>
+<h3 id="25-p1">2.5 프로그램북 [P1] ★</h3>
+<ul>
+<li>모바일 우선 시간표, 내 일정 담기, 세션 알림(푸시), 발표자료·포스터 열람, 현장 QR → 논문 상세</li>
+<li>학술대회 전 공개 → 대회 트래픽 흡수</li>
+</ul>
+<h3 id="26-p0-p1">2.6 저자 프로필 [P0 기본 / P1 클레임] ★</h3>
+<ul>
+<li>논문 목록(연도·간행물 필터), 지표(논문수·인용·h-index·소사이어티 활동), 공저자 그래프(D3), 소속 이력</li>
+<li>클레임: ORCID 로그인 또는 이메일 인증 → 본인 표기 병합/분리 요청, 프로필 편집, Preprint/슬라이드 업로드, OA 전환 신청</li>
+<li>동명이인 분리 UI(관리자 승인)</li>
+</ul>
+<h3 id="27-p1">2.7 연구실 페이지 [P1] ★</h3>
+<ul>
+<li>PI + 멤버 논문 자동 집계, 연구 키워드 클라우드, 연도별 산출 차트, 홈페이지·채용 링크, 기업 열람 통계(B2B)</li>
+</ul>
+<h3 id="28-p1">2.8 소사이어티 허브 [P1] ★</h3>
+<ul>
+<li>6개 소사이어티별 최신 논문·행사·수상·세부 기술분류, 운영진, 뉴스레터 구독</li>
+</ul>
+<h3 id="29-p1">2.9 트렌드 대시보드 [P1] ★</h3>
+<ul>
+<li>키워드 연도별 빈도(상승/하강), 소사이어티별 비중 변화, 기관별 산출, 신규 등장 키워드 탐지, 주간 AI 브리핑(기업 플랜)</li>
+</ul>
+<h3 id="210-ai-p0-p1-p2">2.10 AI 리서치 [P0 검색·요약 / P1 딥리서치·비교 / P2 리뷰어] ★</h3>
+<table>
+<thead>
+<tr>
+<th>모드</th>
+<th>입력</th>
+<th>출력</th>
+<th>가드</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI 검색</td>
+<td>자연어 질문</td>
+<td>근거 인용 답변(각 문장에 [n] 인용, 클릭 시 원문 페이지·bbox 하이라이트) + 참고 논문 표</td>
+<td>근거 없는 주장 금지, 인용 ID 검증, 1,000자 입력 제한</td>
+</tr>
+<tr>
+<td>논문 QA</td>
+<td>논문 1편 + 질문</td>
+<td>해당 논문 청크 기반 답변</td>
+<td>범위 외 질문 거부</td>
+</tr>
+<tr>
+<td>요약</td>
+<td>논문</td>
+<td>한줄/목차/방법/쉬운/영문, 핵심 수식·그림 포함</td>
+<td>배치 사전 생성</td>
+</tr>
+<tr>
+<td>번역</td>
+<td>논문·문단</td>
+<td>한↔영, 원문-번역 분할 뷰, 학회 용어집 반영</td>
+<td>캐시</td>
+</tr>
+<tr>
+<td>비교표</td>
+<td>논문 2~10편</td>
+<td>성능 지표 교차표(단위 정규화), 차이점 서술</td>
+<td>추출 신뢰도 표시</td>
+</tr>
+<tr>
+<td>딥리서치</td>
+<td>주제</td>
+<td>계획→검색 로그→A4 5~10쪽 보고서(Markdown/DOCX), 참고문헌 자동</td>
+<td>검증 패스</td>
+</tr>
+<tr>
+<td>리뷰어 모드</td>
+<td>PDF 업로드</td>
+<td>유사 논문 top 20, 신규성·중복 가능성 코멘트, 참고문헌 누락 제안</td>
+<td>투고 시스템 연계</td>
+</tr>
+<tr>
+<td>외부 PDF 분석</td>
+<td>업로드</td>
+<td>DBpia AI Reader 동급(요약·번역·QA)</td>
+<td>사용자 사적 공간</td>
+</tr>
+<tr>
+<td>- 쿼터: 비회원 월 10회, 회원 월 100회, Pro/기관 무제한(공정이용 한도)</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>- 대화 이력 저장, 인용 논문 → 서재 저장, 보고서 내보내기</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="211-p0">2.11 내 서재 [P0] ★(공유·노트)</h3>
+<ul>
+<li>폴더, 태그, 노트(마크다운), <strong>공유 링크/연구실 공유 폴더</strong>, RIS/BibTeX 내보내기, Zotero 동기화(P2)</li>
+</ul>
+<h3 id="212-p1">2.12 팔로우·알림 [P1]</h3>
+<ul>
+<li>저자·키워드·간행물·연구실·세션 팔로우 → 신규 등재/인용 발생/학술대회 일정 알림(이메일·웹푸시)</li>
+<li>검색식 저장 알림</li>
+</ul>
+<h3 id="213-p1">2.13 인용 관리 [P1] ★</h3>
+<ul>
+<li>웹 기반(모든 OS), 스타일: APA·IEEE·Chicago·학회 한글 양식·국문 각주, BibTeX/RIS/EndNote XML, 한글(HWP) 참고문헌 붙여넣기 포맷, Chrome 확장(P2)</li>
+</ul>
+<h3 id="214-open-api-p0-p1-ai">2.14 Open API [P0 서지 / P1 원문·AI] ★</h3>
+<pre><code>GET /api/v1/search?q=&amp;type=&amp;year=&amp;society=&amp;page=      (무료, 60rpm)
+GET /api/v1/papers/{id|doi}                             서지+초록+키워드+인용수
+GET /api/v1/papers/{id}/references | /citations
+GET /api/v1/authors/{id} | /authors/search
+GET /api/v1/venues/{slug}/issues
+GET /api/v1/papers/{id}/fulltext   (권한·종량)
+POST /api/v1/ai/search              (종량, 토큰 과금)
+GET /api/v1/export/bulk?since=      (메타+임베딩 덤프, 라이선스 티어)
+</code></pre>
+<ul>
+<li>OpenAPI 3.1 문서, API 키, 레이트 리밋, 사용량 대시보드, OAI-PMH 엔드포인트(도서관 하베스팅)</li>
+</ul>
+<h3 id="215-p0">2.15 관리자 [P0]</h3>
+<ul>
+<li>인제스트: PDF 업로드/일괄, 파싱 결과 교정(제목·저자·초록·참고문헌), 품질 플래그 큐</li>
+<li>학술대회 관리: 세션/트랙 CSV 업로드, 논문-세션 매핑, 수상 지정</li>
+<li>저자 명확화 검수(병합/분리 제안 승인)</li>
+<li>DOI 등록(Crossref XML 생성·전송), OpenAlex/KCI 동기화 상태</li>
+<li>회원 연동(학회 회원 DB CSV/API), 기관·IP 관리, API 키·플랜</li>
+<li>통계: 이용·검색어·AI 비용·전환율</li>
+</ul>
+<hr />
+<h2 id="3">3. 비기능 요구사항</h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>기준</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>성능</td>
+<td>LCP &lt; 2.0s, 검색 p95 &lt; 300ms, AI 첫 토큰 &lt; 2s</td>
+</tr>
+<tr>
+<td>가용성</td>
+<td>99.9% (Vercel+Supabase+Cloudflare)</td>
+</tr>
+<tr>
+<td>보안</td>
+<td>ISMS-P 준거, OWASP Top10, 다운로드 워터마크, 레이트 리밋</td>
+</tr>
+<tr>
+<td>접근성</td>
+<td>WCAG 2.1 AA</td>
+</tr>
+<tr>
+<td>국제화</td>
+<td>ko/en 완전 지원, 영문 URL slug</td>
+</tr>
+<tr>
+<td>SEO</td>
+<td>Google Scholar 인덱싱 가이드 준수, sitemap, canonical</td>
+</tr>
+<tr>
+<td>데이터</td>
+<td>DOI 95%+, 초록 95%+, 참고문헌 파싱 80%+, 저자 명확화 정확도 90%+</td>
+</tr>
+</tbody>
+</table></section><section id='07_data_pipeline'><div class='sec-head'><h1>07. 데이터 수집·정제·적재 파이프라인</h1><span class='src'>07_data_pipeline.md</span></div><blockquote>
+<p>목표: 3만 편 원문 PDF → 구조화 메타 + 청크 임베딩 + Figure/Table + 참고문헌/인용 그래프 + 저자 명확화, <strong>자동화율 90%+, 사람 검수 10% 이하</strong></p>
+</blockquote>
+<hr />
+<h2 id="1">1. 소스 확보 전략</h2>
+<table>
+<thead>
+<tr>
+<th>소스</th>
+<th>내용</th>
+<th>확보 방법</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>학회 자체 보유</td>
+<td>최근 10~15년 학술대회·논문지 born-digital PDF, 투고시스템 메타</td>
+<td>학회 사무국 전달(외장/클라우드)</td>
+<td>1순위</td>
+</tr>
+<tr>
+<td>DBpia 디지털화본</td>
+<td>1960~2000년대 스캔본</td>
+<td><strong>계약 검토 후</strong> 반환/재제공 요청</td>
+<td>권리 확인</td>
+</tr>
+<tr>
+<td>KCI</td>
+<td>논문지 서지·초록·참고문헌·인용</td>
+<td>KCI Open API (공개)</td>
+<td>무료</td>
+</tr>
+<tr>
+<td>KoreaScience(KISTI)</td>
+<td>전자공학회논문지 SD/SP/… 서지+일부 원문</td>
+<td>KoreaScience Open API</td>
+<td>무료</td>
+</tr>
+<tr>
+<td>Crossref</td>
+<td>DOI 메타, 참고문헌, 피인용</td>
+<td>REST API (무료, polite pool)</td>
+<td></td>
+</tr>
+<tr>
+<td>OpenAlex</td>
+<td>저자·기관·인용·개념</td>
+<td>API (무료)</td>
+<td>ROR·ORCID 연계</td>
+</tr>
+<tr>
+<td>Semantic Scholar</td>
+<td>인용 문맥, 영향력 인용</td>
+<td>API (키 신청)</td>
+<td>영문 위주</td>
+</tr>
+<tr>
+<td>ORCID / KRI</td>
+<td>저자 식별</td>
+<td>공개 API</td>
+<td></td>
+</tr>
+<tr>
+<td>학회 행사 데이터</td>
+<td>세션·트랙·수상·프로그램</td>
+<td>사무국 엑셀/프로그램북 PDF 파싱</td>
+<td>★ 독점 메타</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2">2. 파이프라인 단계</h2>
+<pre><code>[1 수집] → [2 파싱] → [3 구조화] → [4 추출(Fig/Tab/Eq/Ref)] → [5 보강(DOI/인용/저자)] → [6 임베딩] → [7 색인] → [8 QA/검수]
+</code></pre>
+<h3 id="1-ingest">단계 1. 수집 (ingest)</h3>
+<ul>
+<li>입력: PDF + (있다면) 메타 CSV/XML(투고시스템 export)</li>
+<li>R2 업로드 <code>raw/{venue}/{year}/{file}.pdf</code>, SHA-256 중복 제거, <code>ingest_jobs</code> 생성</li>
+<li>스캔본 판별: 텍스트 레이어 유무(pdfplumber) → OCR 큐 분기</li>
+</ul>
+<h3 id="2_1">단계 2. 파싱</h3>
+<table>
+<thead>
+<tr>
+<th>도구</th>
+<th>역할</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GROBID</strong></td>
+<td>헤더(제목·저자·소속·초록·키워드), 본문 섹션, 참고문헌 TEI</td>
+<td>학술 PDF 표준, 한글 헤더 정확도 보완 필요</td>
+</tr>
+<tr>
+<td><strong>marker / Docling</strong></td>
+<td>PDF→Markdown(레이아웃 보존), 표·수식(LaTeX) 추출</td>
+<td>GROBID 보완</td>
+</tr>
+<tr>
+<td><strong>OCR</strong></td>
+<td>스캔본: Tesseract(kor+eng) 또는 Upstage Document OCR / Naver CLOVA OCR</td>
+<td>한글 스캔 정확도는 상용 API가 유리</td>
+</tr>
+<tr>
+<td><strong>Claude (Haiku/Sonnet)</strong></td>
+<td>파싱 실패·저품질 헤더의 메타 재추출(첫 2쪽 → JSON), 한글 저자/소속 분리</td>
+<td>비용: 2쪽 × 3만 편 ≈ 수십 달러</td>
+</tr>
+</tbody>
+</table>
+<p>출력: <code>papers</code>(기본 메타), <code>paper_sections</code>, <code>references_raw</code></p>
+<h3 id="3">단계 3. 구조화·정규화</h3>
+<ul>
+<li>제목/초록 한·영 분리, 키워드 분리(;, ·, , 처리), 페이지 범위</li>
+<li>간행물 매핑: 파일명/폴더/메타 → <code>venues</code>, <code>issues</code> (50종 매핑 테이블)</li>
+<li>학술대회 세션 매핑: 프로그램북 파싱(표 추출) → <code>sessions</code> → 논문 제목 fuzzy 매칭(rapidfuzz ≥ 0.9)</li>
+<li>기술분류: Claude Haiku로 소사이어티/세부분류 다중 라벨 분류(few-shot + 학회 분류표) → <code>subject_ids</code></li>
+<li>품질 플래그: 초록 없음, 저자 0명, 페이지 불일치 등 → 검수 큐</li>
+</ul>
+<h3 id="4-figure-table-equation">단계 4. Figure / Table / Equation 추출</h3>
+<ul>
+<li><strong>PDFFigures2</strong> 또는 Docling 레이아웃 모델 → figure/table bbox + 캡션</li>
+<li>이미지 크롭(PyMuPDF) → R2 <code>figures/{paper}/{n}.png</code> (+ WebP 썸네일)</li>
+<li>표: Docling TableFormer → JSON 행렬 → <code>paper_figures.extracted_data</code></li>
+<li>수식: marker LaTeX → <code>chunk_type='equation'</code></li>
+<li>성능 지표 추출(★): 표 JSON + 캡션 → Claude Sonnet "metric/value/unit/condition" JSON → <code>paper_specs</code> (신뢰도 &lt; 0.7은 미노출)</li>
+</ul>
+<h3 id="5-enrichment">단계 5. 보강 (enrichment)</h3>
+<ol>
+<li><strong>DOI</strong>: 기존 DOI 조회(Crossref <code>query.bibliographic</code>) → 없으면 Crossref 회원 가입 후 신규 등록(XML 배치, 건당 $1 → 3만 편 약 $30k; <strong>학술대회 논문은 선택적</strong>/논문지 우선)</li>
+<li><strong>참고문헌 매칭</strong>: <code>references_raw.parsed</code> → Crossref/OpenAlex 매칭 → 내부 논문이면 <code>matched_paper_id</code> → <code>citations(source=internal)</code></li>
+<li><strong>피인용</strong>: Crossref cited-by, OpenAlex <code>cited_by_api_url</code>, KCI 인용 → <code>citations</code> 병합, <code>papers.citation_count</code> 갱신(일 1회)</li>
+<li><strong>저자 명확화</strong>(★ 핵심):
+   - 블로킹: 성명 정규화(한글/로마자 변환 매핑, 공백·하이픈 제거)
+   - 피처: 소속 유사도, 공저자 중복, 연도 근접, 이메일 도메인, 주제 벡터 유사도, ORCID/KRI 일치
+   - 모델: 규칙 + LightGBM 쌍분류 → 그래프 클러스터링(연결요소)
+   - 임계값 ≥0.85 자동 병합, 0.6~0.85 검수 큐, 클레임 시 사용자 확정</li>
+<li><strong>기관 정규화</strong>: ROR 매칭 + 학회 소속 사전(대학 약칭·영문명)</li>
+<li><strong>코드/데이터셋 링크</strong>: 본문 URL 정규식(github.com, huggingface, ieee-dataport, zenodo) → HEAD 체크</li>
+</ol>
+<h3 id="6">단계 6. 임베딩</h3>
+<ul>
+<li>청킹: 섹션 경계 우선, ~800토큰, 100토큰 오버랩, 표·캡션·수식은 독립 청크</li>
+<li>모델: <strong>voyage-3-large</strong>(다국어, 1024d) 또는 자체 호스팅 <strong>bge-m3</strong>(무료, 한글 양호)</li>
+<li>논문 대표 벡터: 제목+초록+키워드</li>
+<li>비용: 3만 편 × ~15k토큰 = 4.5억 토큰 → Voyage 기준 약 $50~100 (초기 1회)</li>
+</ul>
+<h3 id="7">단계 7. 색인</h3>
+<ul>
+<li>Postgres 트리거 → Typesense upsert(검색 필드 + facet), pgvector HNSW</li>
+<li>ISR 재검증: 논문·권호·저자 페이지 <code>revalidateTag</code></li>
+</ul>
+<h3 id="8-ai-qa">단계 8. AI 사전 생성 &amp; QA</h3>
+<ul>
+<li>요약 5종 배치 생성(Claude Batch API 50% 할인, 프롬프트 캐시) → <code>paper_summaries</code></li>
+<li>자동 QA: 메타 완전성 점수, 참고문헌 파싱률, 샘플 100편 사람 검수 → 정확도 리포트</li>
+<li>관리자 교정 UI → 수정 이력 저장</li>
+</ul>
+<h2 id="3-3">3. 처리량·일정 추정 (3만 편)</h2>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>단위 처리</th>
+<th>총 소요(병렬 8워커)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GROBID+Docling</td>
+<td>~6초/편</td>
+<td>~6시간</td>
+</tr>
+<tr>
+<td>OCR(스캔본 30% 가정, 9천 편)</td>
+<td>~40초/편</td>
+<td>~12시간</td>
+</tr>
+<tr>
+<td>Figure 추출</td>
+<td>~4초/편</td>
+<td>~4시간</td>
+</tr>
+<tr>
+<td>임베딩</td>
+<td>API 배치</td>
+<td>~3시간</td>
+</tr>
+<tr>
+<td>Crossref/OpenAlex 보강</td>
+<td>레이트 리밋 50rps</td>
+<td>~1일</td>
+</tr>
+<tr>
+<td>AI 요약 배치</td>
+<td>Batch API</td>
+<td>~1일</td>
+</tr>
+<tr>
+<td>저자 명확화</td>
+<td>전체 배치</td>
+<td>~2시간 + 검수 2주</td>
+</tr>
+<tr>
+<td>→ <strong>기계 처리 1주, 검수 포함 4~6주</strong></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="4">4. 증분 운영 (학술대회 당일 등재 ★)</h2>
+<ul>
+<li>투고시스템(JAMS/EDAS/OpenConf) → 채택 논문 camera-ready PDF + 세션 배정 export → 파이프라인 자동 → 대회 D-7 비공개 적재 → 개회 시 공개 플래그 ON</li>
+<li>저널: 게재 확정 즉시 등재 + DOI 등록</li>
+</ul>
+<h2 id="5-pipeline">5. 코드 스켈레톤 (<code>pipeline/</code>)</h2>
+<pre><code>pipeline/
+  ingest/      r2 업로드, 중복 검사, 잡 생성
+  parse/       grobid_client.py, docling_runner.py, ocr.py, claude_header_fix.py
+  structure/   venue_mapper.py, session_matcher.py, classifier.py
+  extract/     figures.py, tables.py, equations.py, specs_llm.py
+  enrich/      crossref.py, openalex.py, kci.py, author_disambig.py, ror.py, links.py
+  embed/       chunker.py, voyage.py
+  index/       typesense_sync.py
+  qa/          completeness.py, sample_review_export.py
+  worker.py    pgmq 소비 루프
+  config.yaml
+</code></pre>
+<ul>
+<li>언어: Python 3.12, 의존: grobid-client, docling, pymupdf, rapidfuzz, httpx, supabase-py, voyageai, anthropic</li>
+<li>실행 환경: Fly.io/Railway 컨테이너(GROBID 포함, 4vCPU/8GB) 또는 GCP Cloud Run Jobs</li>
+</ul></section><section id='08_business_model'><div class='sec-head'><h1>08. 비즈니스 모델 · 요금제 제안</h1><span class='src'>08_business_model.md</span></div><blockquote>
+<p>원칙: <strong>회원 가치 극대화(무료) + 기업·기관·API에서 수익</strong> — DBpia의 "단건 9,000원" 모델과 정반대 포지션</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 수익 구조 비교</h2>
+<table>
+<thead>
+<tr>
+<th>수익원</th>
+<th>DBpia</th>
+<th>IEIE Scholar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기관 구독</td>
+<td>주력(대학 90%)</td>
+<td>유지(도서관 패키지, AI 포함) — 가격은 DBpia 대비 낮게, 전자공학 단과대·학과 단위 상품</td>
+</tr>
+<tr>
+<td>개인 단건</td>
+<td>9,000원/편</td>
+<td>비회원 3,000원/편 또는 <strong>회원가입 유도</strong>(학회 회비에 포함)</td>
+</tr>
+<tr>
+<td>개인 구독</td>
+<td>월/분기, AI 플랜 유료화</td>
+<td>회원 무료 / 비회원 Pro(AI 포함)</td>
+</tr>
+<tr>
+<td>데이터 판매</td>
+<td>누리미디어 수익</td>
+<td><strong>학회 직접 라이선스</strong>(AI 학습, 벌크 메타)</td>
+</tr>
+<tr>
+<td>B2B 기술동향</td>
+<td>없음</td>
+<td>★ 특별회원 기업 대상 대시보드·브리핑</td>
+</tr>
+<tr>
+<td>학술대회 연계</td>
+<td>없음</td>
+<td>★ 등록비 번들, 프로그램북 광고, 가상 전시 부스</td>
+</tr>
+<tr>
+<td>API</td>
+<td>신청제, 서지 한정</td>
+<td>서지 무료 + 원문/AI 종량</td>
+</tr>
+<tr>
+<td>채용·인재</td>
+<td>없음</td>
+<td>★ 연구실 페이지 기반 리크루팅 라이선스</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2">2. 요금제 (안)</h2>
+<h3 id="_1">개인</h3>
+<table>
+<thead>
+<tr>
+<th>플랜</th>
+<th>가격</th>
+<th>포함</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Free</td>
+<td>0</td>
+<td>서지·초록·OA 원문, 미리보기 2쪽, AI 월 10회, 서재 100편</td>
+</tr>
+<tr>
+<td><strong>Member</strong>(학회 회원)</td>
+<td>회비 포함 (0 추가)</td>
+<td>전 원문, AI 월 100회, 서재 무제한, 저자 클레임, 프로그램북</td>
+</tr>
+<tr>
+<td>Pro</td>
+<td>월 9,900원 / 연 99,000원</td>
+<td>Member + AI 무제한(공정이용), 딥리서치 월 30회, 비교표, 리뷰어 모드, 외부 PDF 분석</td>
+</tr>
+<tr>
+<td>단건</td>
+<td>3,000원/편</td>
+<td>비회원 원문 1편 (DBpia 9,000원 대비 1/3)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_2">기관</h3>
+<table>
+<thead>
+<tr>
+<th>플랜</th>
+<th>가격(연)</th>
+<th>포함</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Library Basic</td>
+<td>150만~600만원 (FTE 규모별)</td>
+<td>원문 무제한, IP/SSO, 이용통계, OAI-PMH</td>
+</tr>
+<tr>
+<td>Library AI</td>
+<td>Basic + 50%</td>
+<td>AI 무제한, 딥리서치, 학과 대시보드</td>
+</tr>
+<tr>
+<td>Enterprise(기업)</td>
+<td>500만~3,000만원</td>
+<td>AI + ★기술 레이더(키워드·경쟁사·연구실 추적), 주간 AI 브리핑, 인재 탐색, API Business 티어, 특별회원 등급 연동 할인</td>
+</tr>
+</tbody>
+</table>
+<h3 id="api">API / 데이터</h3>
+<table>
+<thead>
+<tr>
+<th>티어</th>
+<th>가격</th>
+<th>한도</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Free</td>
+<td>0</td>
+<td>서지 60rpm, 월 10만 콜</td>
+</tr>
+<tr>
+<td>Dev</td>
+<td>월 5만원</td>
+<td>300rpm, 원문 메타+초록, AI 검색 월 1천 콜</td>
+</tr>
+<tr>
+<td>Business</td>
+<td>월 50만원~</td>
+<td>1,000rpm, 원문 접근, AI 종량(토큰 단가+30%), 벌크 덤프</td>
+</tr>
+<tr>
+<td>데이터 라이선스</td>
+<td>건별 협상(수천만원~)</td>
+<td>AI 학습용 원문+메타, 연 1회 갱신</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-3">3. 재무 가정 (3년차 목표, 보수적)</h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>수량</th>
+<th>단가</th>
+<th>연매출</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기관 Basic/AI</td>
+<td>60개 기관</td>
+<td>평균 400만원</td>
+<td>2.4억</td>
+</tr>
+<tr>
+<td>Enterprise</td>
+<td>15개사</td>
+<td>평균 1,500만원</td>
+<td>2.25억</td>
+</tr>
+<tr>
+<td>Pro 개인</td>
+<td>2,000명</td>
+<td>9.9만원</td>
+<td>2.0억</td>
+</tr>
+<tr>
+<td>API/데이터</td>
+<td>—</td>
+<td>—</td>
+<td>1.0억</td>
+</tr>
+<tr>
+<td>학술대회 연계(광고·부스)</td>
+<td>—</td>
+<td>—</td>
+<td>0.5억</td>
+</tr>
+<tr>
+<td><strong>합계</strong></td>
+<td></td>
+<td></td>
+<td><strong>약 8억원</strong></td>
+</tr>
+</tbody>
+</table>
+<p>운영비(인프라 월 200만원 + 인력 4명 + 검수/외주) 약 4~5억 → 3년차 흑자 가능. 초기 구축비는 09_roadmap 참조.</p>
+<h2 id="4">4. 핵심 리스크와 대응</h2>
+<table>
+<thead>
+<tr>
+<th>리스크</th>
+<th>대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DBpia 독점 전송권 계약</td>
+<td>계약서 검토 → 비독점 전환 협상 또는 만료 시점에 맞춘 런칭. 병행 유통 시에도 <strong>학회 사이트가 1차 공개처</strong>가 되도록 당일 등재로 선점</td>
+</tr>
+<tr>
+<td>기관 도서관의 DBpia 패키지 관성</td>
+<td>전자공학 단과대 단위 저가 상품 + KERIS 대학라이선스 등록 추진</td>
+</tr>
+<tr>
+<td>AI 저작권(저자 동의)</td>
+<td>투고 규정에 AI 활용·OA 조항 신설, 과거 논문은 옵트아웃 안내</td>
+</tr>
+<tr>
+<td>AI 비용 폭증</td>
+<td>캐시·배치·Haiku 라우팅, 플랜별 쿼터, 비용 대시보드</td>
+</tr>
+<tr>
+<td>저자 명확화 오류(명예)</td>
+<td>검수 큐 + 클레임 기반 정정, 변경 이력 공개</td>
+</tr>
+</tbody>
+</table></section><section id='09_roadmap'><div class='sec-head'><h1>09. 구축 로드맵 · 인력 · 비용</h1><span class='src'>09_roadmap.md</span></div><hr />
+<h2 id="1">1. 단계별 로드맵</h2>
+<h3 id="phase-0-1">Phase 0 — 준비 (1개월)</h3>
+<ul>
+<li>[ ] DBpia·KISS 등 기존 유통 계약 검토, 저작권·AI 활용 범위 법률 자문</li>
+<li>[ ] 원본 PDF 인벤토리(보유/미보유/스캔본 비율) 확정</li>
+<li>[ ] 학회 회원 DB 연동 방식(API/CSV) 합의, Crossref 회원 가입, ORCID 멤버십 검토</li>
+<li>[ ] 학술대회 세션 데이터(최근 5년) 수집</li>
+<li>[ ] 도메인·브랜드(가칭 IEIE Scholar / scholar.theieie.org) 확정</li>
+</ul>
+<h3 id="phase-1-mvp-3-3-ai">Phase 1 — MVP (3개월) → <strong>3만 편 검색·열람·기본 AI</strong></h3>
+<table>
+<thead>
+<tr>
+<th>월</th>
+<th>산출물</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M1</td>
+<td>스키마 적용, 파이프라인 v1(GROBID+Docling+임베딩), 1만 편 적재, 검색 API</td>
+</tr>
+<tr>
+<td>M2</td>
+<td>홈·검색·논문 상세·권호·간행물·저자 기본 페이지, 회원 인증(학회 회원 연동), PDF 뷰어·다운로드·워터마크, 인용 내보내기</td>
+</tr>
+<tr>
+<td>M3</td>
+<td>3만 편 완료, AI 요약 5종 배치, AI 검색(근거 인용), 내 서재, 관리자 인제스트/교정, Open API v1(서지), SEO(citation 메타·sitemap), 베타 오픈(추계학술대회 11월 연계 ★)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="phase-2-v1-3-ai">Phase 2 — V1 (3개월) → <strong>학술대회·저자·AI 심화</strong></h3>
+<ul>
+<li>세션 트리·프로그램북(2027 ICEIC 1월 적용), 저자 클레임·ORCID, 연구실 페이지, 소사이어티 허브</li>
+<li>피인용 통합(Crossref/OpenAlex/KCI), 인용 문맥</li>
+<li>Figure/Table 갤러리·검색, 비교표(β), 딥리서치(β), 번역(용어집)</li>
+<li>팔로우·알림, 공유 서재, 웹 인용관리</li>
+<li>기관 플랜(IP/SSO), 결제(토스/Stripe), API Dev 티어</li>
+<li>정식 런칭 (2027 하계학술대회 6월 목표)</li>
+</ul>
+<h3 id="phase-3-v2-6">Phase 3 — V2 (6개월) → <strong>수익화·생태계</strong></h3>
+<ul>
+<li>Enterprise 기술 레이더·주간 브리핑, 인재 탐색</li>
+<li>리뷰어 모드·투고시스템 연동, 수상·Preprint</li>
+<li>1960~80년대 아카이브 OCR 확장(+1.5만 편), 영문 UI 완성, OpenAlex 공급</li>
+<li>커뮤니티(토론·저자 답변), 모바일 PWA, Zotero 커넥터, OAI-PMH</li>
+<li>데이터 라이선스 상품화, KERIS 라이선스 등록</li>
+</ul>
+<h2 id="2-mvpv1-6">2. 인력 (MVP~V1, 6개월)</h2>
+<table>
+<thead>
+<tr>
+<th>역할</th>
+<th>인원</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PM/아키텍트</td>
+<td>1</td>
+<td>요구·우선순위·계약</td>
+</tr>
+<tr>
+<td>풀스택(Next.js/Supabase)</td>
+<td>2</td>
+<td>프론트+API+관리자</td>
+</tr>
+<tr>
+<td>데이터/AI 엔지니어(Python)</td>
+<td>1</td>
+<td>파이프라인·RAG·명확화</td>
+</tr>
+<tr>
+<td>디자이너(UX/UI)</td>
+<td>0.5</td>
+<td>디자인 시스템</td>
+</tr>
+<tr>
+<td>메타데이터 검수</td>
+<td>2(계약)</td>
+<td>3만 편 샘플·오류 교정, 세션 매핑</td>
+</tr>
+<tr>
+<td>학회 사무국 담당</td>
+<td>1(겸임)</td>
+<td>원본·회원·행사 데이터</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3">3. 비용 추정</h2>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>금액</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>개발 인건비 6개월(4.5 FTE)</td>
+<td>2.5~3.5억원</td>
+</tr>
+<tr>
+<td>검수 외주</td>
+<td>2~3천만원</td>
+</tr>
+<tr>
+<td>OCR 상용 API(9천 편 × 평균 8쪽)</td>
+<td>500~1,000만원</td>
+</tr>
+<tr>
+<td>AI 초기 배치(요약·분류·추출·임베딩)</td>
+<td>300~600만원</td>
+</tr>
+<tr>
+<td>Crossref DOI(논문지 1.2만 편 우선, $1/건)</td>
+<td>약 1,700만원 (학술대회는 선택)</td>
+</tr>
+<tr>
+<td>인프라 6개월</td>
+<td>600~1,200만원</td>
+</tr>
+<tr>
+<td>법률·보안(ISMS-P 준비)</td>
+<td>1~2천만원</td>
+</tr>
+<tr>
+<td><strong>합계(MVP+V1)</strong></td>
+<td><strong>약 3.5~4.5억원</strong></td>
+</tr>
+</tbody>
+</table>
+<p>→ 정부 과제(학술단체 지원, 디지털 학술정보 구축 사업) 또는 특별회원 기업 스폰서십으로 초기 비용 분담 검토.</p>
+<h2 id="4">4. 마일스톤 체크</h2>
+<table>
+<thead>
+<tr>
+<th>시점</th>
+<th>지표</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M3 베타</td>
+<td>3만 편 검색 가능, 초록 95%, AI 요약 100%, 추계대회 458편 당일 등재</td>
+</tr>
+<tr>
+<td>M6 정식</td>
+<td>DOI 90%, 저자 클레임 1,000명, 기관 10곳, MAU 8,000</td>
+</tr>
+<tr>
+<td>M12</td>
+<td>KPI(03 문서) 달성, Enterprise 5개사, API 키 200개, 흑자 전환 경로 확정</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5">5. 즉시 착수 가능한 다음 단계</h2>
+<ol>
+<li><code>05_database_schema.sql</code>을 Supabase 신규 프로젝트에 적용 → <code>web/</code>에 Next.js 14 스캐폴딩</li>
+<li>학회로부터 <strong>최근 2개 학술대회(2025 하계 1,326편 + 추계 458편) PDF + 세션표</strong> 확보 → 파이프라인 PoC(1,784편)로 품질·비용 실측</li>
+<li>DBpia 계약서 검토 결과에 따라 런칭 범위(OA 여부·동시 유통) 확정</li>
+</ol></section><section id='10_sources'><div class='sec-head'><h1>10. 조사 출처</h1><span class='src'>10_sources.md</span></div><h2 id="dbpia">DBpia 공식</h2>
+<ul>
+<li>DBpia 메인 https://www.dbpia.co.kr/</li>
+<li>저널/발행기관 찾기 https://www.dbpia.co.kr/journal/journal-iprd-search</li>
+<li>2025 하계학술대회 논문집(1,326편) https://www.dbpia.co.kr/journal/voisDetail?voisId=VOIS00779192</li>
+<li>2025 추계학술대회 논문집(458편) https://www.dbpia.co.kr/journal/voisDetail?voisId=VOIS00793532</li>
+<li>논문 상세 구조 샘플 https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12345678</li>
+<li>FAQ(요금·기관·데이터 판매) https://www.dbpia.co.kr/faq/faqView?fbId=134 , https://www.dbpia.co.kr/faq/faqView?fbId=132</li>
+<li>공지: AI 에이전트 정식 출시(2026.01.20) https://www.dbpia.co.kr/notice/noticeView?nId=1703</li>
+<li>Open API https://api.dbpia.co.kr/openApi/index.do</li>
+<li>Citeasy https://citeasy.dbpia.co.kr/</li>
+<li>DBpia AI https://dbpia.ai/</li>
+</ul>
+<h2 id="_1">보도</h2>
+<ul>
+<li>DBpia AI검색 공개(2025.03, 국내 400만·해외 2.6억) https://dhnews.co.kr/news/view/1065576113616633</li>
+<li>AI뷰어 출시(2024.10) https://dhnews.co.kr/news/view/1065598964481468</li>
+<li>딥리서치·AI Reader 베타(2026.03) https://dhnews.co.kr/news/view/1065595839136446</li>
+<li>AI 에이전트 출시 https://www.dhnews.co.kr/news/view/1065595442427886</li>
+<li>동국대 AI 구독·107개 대학 파일럿(2025.08) https://www.segye.com/newsView/20250826516947</li>
+<li>KERIS 구독 계약 https://dhnews.co.kr/news/view/1065590613895404</li>
+<li>UNIST DBpia AI 매뉴얼 v2.0(2025.07) https://library.unist.ac.kr/wp-content/uploads/2025/09/DBpiaAI_매뉴얼_v.2.0_20250724_re.pdf</li>
+</ul>
+<h2 id="_2">대한전자공학회</h2>
+<ul>
+<li>학회 홈 https://www.theieie.org/</li>
+<li>KCI 전자공학회논문지 https://www.kci.go.kr/kciportal/po/search/poCitaView.kci?sereId=000451</li>
+<li>KoreaScience 전자공학회논문지 IE https://koreascience.kr/journal/DHJJZS.pub</li>
+</ul>
+<h2 id="_3">참고 (설계)</h2>
+<ul>
+<li>GROBID https://github.com/kermitt2/grobid</li>
+<li>Docling https://github.com/docling-project/docling</li>
+<li>Crossref REST API https://api.crossref.org</li>
+<li>OpenAlex https://docs.openalex.org</li>
+<li>Typesense https://typesense.org</li>
+<li>pgvector https://github.com/pgvector/pgvector</li>
+<li>Voyage AI embeddings https://docs.voyageai.com</li>
+</ul>
+<blockquote>
+<p>주의: DBpia 요금(개인 구독·AI 플랜 금액)은 사이트에 명시되어 있지 않아 비공개로 표기했음. 논문 규모 추정치(약 45,000편)는 권호 샘플 기반 추정이며 학회 사무국 데이터로 확정 필요.</p>
+</blockquote></section><section id='dbpia_feature_matrix'><div class='sec-head'><h1>부록 A. DBpia vs IEIE Scholar 기능 비교 매트릭스</h1><span class='src'>dbpia_feature_matrix.csv</span></div><p class='muted'>55행 · 원본: <code>dbpia_feature_matrix.csv</code> <input class='filter' placeholder='표 필터…' data-target='dbpia_feature_matrix'></p><div class='tablewrap'><table class='csv'><thead><tr><th>category</th><th>feature</th><th>dbpia</th><th>ieie_scholar_proposal</th><th>priority</th><th>differentiator</th></tr></thead><tbody><tr><td>검색</td><td>키워드 검색(제목/초록/저자/키워드)</td><td>O</td><td>O</td><td>P0</td><td></td></tr><tr><td>검색</td><td>본문(원문 청크) 검색</td><td>△</td><td>O</td><td>P0</td><td>★</td></tr><tr><td>검색</td><td>그림/표 캡션 검색</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>검색</td><td>수식 검색</td><td>X</td><td>O</td><td>P2</td><td>★</td></tr><tr><td>검색</td><td>하이브리드(BM25+벡터)</td><td>△</td><td>O</td><td>P0</td><td>★</td></tr><tr><td>검색</td><td>세션/트랙/수상 facet</td><td>X</td><td>O</td><td>P0</td><td>★</td></tr><tr><td>검색</td><td>저장 검색식 알림</td><td>O</td><td>O</td><td>P1</td><td></td></tr><tr><td>논문상세</td><td>초록·키워드·참고문헌</td><td>O</td><td>O</td><td>P0</td><td></td></tr><tr><td>논문상세</td><td>피인용(내부)</td><td>O</td><td>O</td><td>P0</td><td></td></tr><tr><td>논문상세</td><td>피인용(Crossref/OpenAlex/KCI 통합)</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>논문상세</td><td>인용 문맥 표시</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>논문상세</td><td>DOI 100%</td><td>△</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>논문상세</td><td>ORCID 저자 링크</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>논문상세</td><td>그림/표/수식 갤러리</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>논문상세</td><td>코드/데이터셋 링크</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>논문상세</td><td>발표 세션·일시·슬라이드</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>논문상세</td><td>Google Scholar citation 메타</td><td>O</td><td>O</td><td>P0</td><td></td></tr><tr><td>논문상세</td><td>이용통계</td><td>O</td><td>O</td><td>P0</td><td></td></tr><tr><td>논문상세</td><td>댓글/토론</td><td>O(미사용)</td><td>O(저자 답변)</td><td>P2</td><td>★</td></tr><tr><td>권호</td><td>권호 논문 목록·일괄 서재</td><td>O</td><td>O</td><td>P0</td><td></td></tr><tr><td>권호</td><td>학술대회 세션 트리</td><td>X</td><td>O</td><td>P0</td><td>★</td></tr><tr><td>권호</td><td>프로그램북(시간표·장소·알림)</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>저자</td><td>저자 프로필</td><td>△</td><td>O</td><td>P0</td><td>★</td></tr><tr><td>저자</td><td>저자 클레임/명확화</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>저자</td><td>공저자 그래프</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>저자</td><td>연구실 페이지</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>발행기관</td><td>학회/소사이어티 허브</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>AI</td><td>논문 요약(4종)</td><td>O</td><td>O(5종+수식·그림)</td><td>P0</td><td></td></tr><tr><td>AI</td><td>AI 검색(근거 인용)</td><td>O</td><td>O(원문 청크·bbox 하이라이트)</td><td>P0</td><td>★</td></tr><tr><td>AI</td><td>AI 에이전트 대화</td><td>O</td><td>O</td><td>P0</td><td></td></tr><tr><td>AI</td><td>딥리서치 보고서</td><td>O(β)</td><td>O</td><td>P1</td><td></td></tr><tr><td>AI</td><td>외부 PDF 분석</td><td>O(β)</td><td>O</td><td>P1</td><td></td></tr><tr><td>AI</td><td>번역(용어집)</td><td>O</td><td>O(학회 용어집)</td><td>P1</td><td>★</td></tr><tr><td>AI</td><td>성능 지표 비교표</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>AI</td><td>리뷰어 모드(신규성 점검)</td><td>X</td><td>O</td><td>P2</td><td>★</td></tr><tr><td>AI</td><td>기술 트렌드 대시보드</td><td>△(키워드 데이터 판매)</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>AI</td><td>기업 주간 브리핑</td><td>X</td><td>O</td><td>P2</td><td>★</td></tr><tr><td>개인화</td><td>내 서재</td><td>O</td><td>O</td><td>P0</td><td></td></tr><tr><td>개인화</td><td>공유 서재/연구실 폴더</td><td>X</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>개인화</td><td>팔로우(저자·키워드·저널·연구실)</td><td>△(키워드·저널)</td><td>O</td><td>P1</td><td>★</td></tr><tr><td>도구</td><td>인용 관리</td><td>O(Citeasy 데스크톱·mac 미지원)</td><td>O(웹·전OS)</td><td>P1</td><td>★</td></tr><tr><td>도구</td><td>한글 참고문헌 양식</td><td>O</td><td>O</td><td>P1</td><td></td></tr><tr><td>도구</td><td>Zotero/Mendeley 연동</td><td>△</td><td>O</td><td>P2</td><td></td></tr><tr><td>도구</td><td>모바일 앱/PWA</td><td>O(앱)</td><td>O(PWA)</td><td>P2</td><td></td></tr><tr><td>접근</td><td>기관 인증(IP/SSO/QR)</td><td>O</td><td>O</td><td>P1</td><td></td></tr><tr><td>접근</td><td>회원 무료 원문</td><td>X</td><td>O</td><td>P0</td><td>★</td></tr><tr><td>접근</td><td>Open Access(학술대회)</td><td>X</td><td>O</td><td>P0</td><td>★</td></tr><tr><td>접근</td><td>단건 가격</td><td>9,000원</td><td>3,000원/비회원</td><td>P0</td><td>★</td></tr><tr><td>API</td><td>서지 API</td><td>O(신청제)</td><td>O(무료 공개)</td><td>P0</td><td>★</td></tr><tr><td>API</td><td>원문/AI API</td><td>X</td><td>O(종량)</td><td>P1</td><td>★</td></tr><tr><td>API</td><td>벌크 데이터/OAI-PMH</td><td>유료 판매</td><td>라이선스+OAI-PMH</td><td>P2</td><td>★</td></tr><tr><td>운영</td><td>관리자 메타 교정</td><td>내부</td><td>O</td><td>P0</td><td></td></tr><tr><td>운영</td><td>당일 등재(학술대회)</td><td>X</td><td>O</td><td>P0</td><td>★</td></tr><tr><td>운영</td><td>SSR/즉시 렌더</td><td>△(placeholder 다수)</td><td>O</td><td>P0</td><td></td></tr><tr><td>운영</td><td>영문 UI</td><td>△</td><td>O</td><td>P1</td><td></td></tr></tbody></table></div></section><section id='ieie_publications'><div class='sec-head'><h1>부록 B. 대한전자공학회 간행물 50종 목록</h1><span class='src'>ieie_publications.csv</span></div><p class='muted'>50행 · 원본: <code>ieie_publications.csv</code> <input class='filter' placeholder='표 필터…' data-target='ieie_publications'></p><div class='tablewrap'><table class='csv'><thead><tr><th>no</th><th>title_ko</th><th>title_en</th><th>group</th><th>status</th><th>language</th><th>note</th></tr></thead><tbody><tr><td>1</td><td>대한전자공학회 학술대회</td><td>IEIE Conference (Summer/Fall)</td><td>conference_domestic</td><td>active</td><td>ko</td><td>2025 하계 1326편 / 추계 458편</td></tr><tr><td>2</td><td>전자공학회지</td><td>Journal of IEIE (magazine)</td><td>magazine</td><td>active</td><td>ko</td><td>해설·동향</td></tr><tr><td>3</td><td>전자공학회논문지-TC</td><td>J-IEIE Telecommunications</td><td>journal_legacy</td><td>merged</td><td>ko</td><td>통신 분과</td></tr><tr><td>4</td><td>대한전자공학회 기타 간행물</td><td>IEIE Misc Publications</td><td>report</td><td>irregular</td><td>ko</td><td></td></tr><tr><td>5</td><td>전자공학회논문지-SP</td><td>J-IEIE Signal Processing</td><td>journal_legacy</td><td>merged</td><td>ko</td><td>신호처리 분과</td></tr><tr><td>6</td><td>전자공학회논문지-SC</td><td>J-IEIE System &amp; Control</td><td>journal_legacy</td><td>merged</td><td>ko</td><td>시스템제어 분과</td></tr><tr><td>7</td><td>전자공학회논문지-CI</td><td>J-IEIE Computer &amp; Information</td><td>journal_legacy</td><td>merged</td><td>ko</td><td>컴퓨터 분과</td></tr><tr><td>8</td><td>전자공학회논문지-SD</td><td>J-IEIE Semiconductor &amp; Devices</td><td>journal_legacy</td><td>merged</td><td>ko</td><td>반도체 분과</td></tr><tr><td>9</td><td>전자공학회잡지</td><td>IEIE Magazine</td><td>magazine</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>10</td><td>대한전자공학회 단기강좌</td><td>IEIE Short Course</td><td>education</td><td>irregular</td><td>ko</td><td></td></tr><tr><td>11</td><td>대한전자공학회 포럼</td><td>IEIE Forum</td><td>education</td><td>irregular</td><td>ko</td><td></td></tr><tr><td>12</td><td>컴퓨터 기술</td><td>Computer Technology</td><td>magazine</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>13</td><td>ICONIP</td><td>International Conference On Neural Information Processing</td><td>conference_intl</td><td>legacy</td><td>en</td><td></td></tr><tr><td>14</td><td>대한전자공학회 세미나</td><td>IEIE Seminar</td><td>education</td><td>irregular</td><td>ko</td><td></td></tr><tr><td>15</td><td>KITE JOURNAL OF ELECTRONICS ENGINEERING</td><td>KITE Journal of Electronics Engineering</td><td>journal_legacy</td><td>legacy</td><td>en</td><td>구 영문지</td></tr><tr><td>16</td><td>대한전자공학회 심포지엄 논문집</td><td>IEIE Symposium Proceedings</td><td>conference_domestic</td><td>irregular</td><td>ko</td><td></td></tr><tr><td>17</td><td>대한전자공학회 워크샵</td><td>IEIE Workshop</td><td>conference_domestic</td><td>irregular</td><td>ko</td><td></td></tr><tr><td>18</td><td>ITC-CSCC</td><td>International Technical Conference on Circuits Systems Computers and Communications</td><td>conference_intl</td><td>active</td><td>en</td><td>2027 부산</td></tr><tr><td>19</td><td>CDMA International Conference and Exhibition</td><td>CDMA International Conference</td><td>conference_intl</td><td>legacy</td><td>en</td><td></td></tr><tr><td>20</td><td>CAD 및 VLSI 설계연구회지</td><td>Journal of CAD &amp; VLSI Design Research Group</td><td>magazine</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>21</td><td>ICVC</td><td>International Conference on VLSI and CAD</td><td>conference_intl</td><td>legacy</td><td>en</td><td></td></tr><tr><td>22</td><td>TENCON 87</td><td>TENCON 87 Computers and Communications Technology Toward 2000</td><td>conference_intl</td><td>legacy</td><td>en</td><td></td></tr><tr><td>23</td><td>JC-CNSS</td><td>Joint Conference on Communications Networks and Switching Systems</td><td>conference_intl</td><td>legacy</td><td>en</td><td></td></tr><tr><td>24</td><td>대한전자공학회 기술강좌</td><td>IEIE Technical Lecture</td><td>education</td><td>irregular</td><td>ko</td><td></td></tr><tr><td>25</td><td>대한전자공학회 연구보고서</td><td>IEIE Research Report</td><td>report</td><td>irregular</td><td>ko</td><td></td></tr><tr><td>26</td><td>대한전자공학회 전기통신학술연구과제</td><td>IEIE Telecom Research Project</td><td>report</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>27</td><td>전자공학회논문지</td><td>Journal of IEIE (Transactions)</td><td>journal</td><td>active</td><td>ko</td><td>KCI 우수등재 통합지</td></tr><tr><td>28</td><td>전자공학회논문지-A</td><td>J-IEIE A</td><td>journal_legacy</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>29</td><td>전자공학회논문지-B</td><td>J-IEIE B</td><td>journal_legacy</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>30</td><td>전자공학회논문지-C</td><td>J-IEIE C</td><td>journal_legacy</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>31</td><td>전자공학회논문지-D</td><td>J-IEIE D</td><td>journal_legacy</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>32</td><td>전자공학회논문지-S</td><td>J-IEIE S</td><td>journal_legacy</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>33</td><td>전자공학회논문지-T</td><td>J-IEIE T</td><td>journal_legacy</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>34</td><td>전자공학회논문지-IE</td><td>J-IEIE Industrial Electronics</td><td>journal_legacy</td><td>merged</td><td>ko</td><td>산업전자 분과</td></tr><tr><td>35</td><td>대한전자공학회 토론회</td><td>IEIE Panel Discussion</td><td>education</td><td>irregular</td><td>ko</td><td></td></tr><tr><td>36</td><td>대한전자공학회 연구과제</td><td>IEIE Research Project</td><td>report</td><td>irregular</td><td>ko</td><td></td></tr><tr><td>37</td><td>대한전자공학회 특별강연회</td><td>IEIE Special Lecture</td><td>education</td><td>irregular</td><td>ko</td><td></td></tr><tr><td>38</td><td>특정연구 결과 발표회 논문집</td><td>Special Research Results Presentation</td><td>conference_domestic</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>39</td><td>대한전자공학회 학술강좌 요약</td><td>IEIE Lecture Summary</td><td>education</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>40</td><td>JTC-CSCC</td><td>Joint Technical Conference on Circuits Systems Computers and Communications</td><td>conference_intl</td><td>legacy</td><td>en</td><td>ITC-CSCC 전신</td></tr><tr><td>41</td><td>IEEE Region 10 Conference</td><td>IEEE Region 10 Conference</td><td>conference_intl</td><td>legacy</td><td>en</td><td></td></tr><tr><td>42</td><td>International Conference on Electronics Informations and Communications</td><td>ICEIC (early name)</td><td>conference_intl</td><td>legacy</td><td>en</td><td></td></tr><tr><td>43</td><td>ICEIC</td><td>International Conference on Electronics Information and Communication</td><td>conference_intl</td><td>active</td><td>en</td><td>2027 후쿠오카</td></tr><tr><td>44</td><td>CAD기술특강</td><td>CAD Technology Special Lecture</td><td>education</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>45</td><td>Advanced and Future Microelectronics Workshop</td><td>Advanced Packaging Technology Workshop</td><td>conference_intl</td><td>legacy</td><td>en</td><td></td></tr><tr><td>46</td><td>JOURNAL OF SEMICONDUCTOR TECHNOLOGY AND SCIENCE</td><td>JSTS</td><td>journal</td><td>active</td><td>en</td><td>SCIE/SCOPUS/KCI</td></tr><tr><td>47</td><td>텔레콤</td><td>Telecom</td><td>magazine</td><td>legacy</td><td>ko</td><td></td></tr><tr><td>48</td><td>JUCT</td><td>Journal of Ubiquitous Convergence Technology</td><td>journal_legacy</td><td>legacy</td><td>en</td><td></td></tr><tr><td>49</td><td>대한전자공학회 ISOCC</td><td>International SoC Design Conference</td><td>conference_intl</td><td>active</td><td>en</td><td>반도체</td></tr><tr><td>50</td><td>IEIE Transactions on Smart Processing &amp; Computing</td><td>IEIE SPC</td><td>journal</td><td>active</td><td>en</td><td>SCOPUS/KCI</td></tr></tbody></table></div></section><section id='05_database_schema'><div class='sec-head'><h1>부록 C. 데이터베이스 스키마 (PostgreSQL / Supabase)</h1><span class='src'>05_database_schema.sql</span></div><p class='muted'>원본: <code>05_database_schema.sql</code> · 72 statements, 35 tables · pgvector/pg_trgm/pgcrypto</p><details open><summary>SQL 전문 보기</summary><pre class='sql'><code>-- 05. IEIE Scholar — PostgreSQL / Supabase 스키마 (v0.1)
+-- 적용: supabase migration new init &amp;&amp; 본 파일 복사 → supabase db push
+-- 전제: extensions: pgvector, pg_trgm, unaccent, pgcrypto
+
+create extension if not exists vector;
+create extension if not exists pg_trgm;
+create extension if not exists unaccent;
+create extension if not exists pgcrypto;
+
+-- =========================================================
+-- 1. 분류·조직
+-- =========================================================
+create table societies (                       -- 6개 소사이어티
+  id          smallserial primary key,
+  code        text unique not null,            -- COMM, SEMI, COMP, AISP, SYSC, INDE
+  name_ko     text not null,
+  name_en     text not null
+);
+
+create table subject_codes (                   -- 세부 기술분류(학회 자체 + IEEE 분류 매핑)
+  id          serial primary key,
+  parent_id   int references subject_codes(id),
+  code        text unique not null,
+  name_ko     text not null,
+  name_en     text,
+  society_id  smallint references societies(id),
+  legacy_division text                         -- SD/SP/SC/CI/TC/IE 매핑
+);
+
+create table organizations (                   -- 대학·기업·연구소 (소속 정규화)
+  id          serial primary key,
+  name_ko     text not null,
+  name_en     text,
+  ror_id      text,                            -- Research Organization Registry
+  domain      text,                            -- 이메일 도메인
+  type        text check (type in (&#x27;university&#x27;,&#x27;company&#x27;,&#x27;institute&#x27;,&#x27;government&#x27;,&#x27;other&#x27;)),
+  country     text default &#x27;KR&#x27;
+);
+create index on organizations using gin (name_ko gin_trgm_ops);
+
+-- =========================================================
+-- 2. 간행물·권호·학술대회
+-- =========================================================
+create table venues (                          -- 저널/학술대회 시리즈 (50종)
+  id          serial primary key,
+  slug        text unique not null,            -- j-ieie, jsts, spc, conf-summer, iceic ...
+  title_ko    text not null,
+  title_en    text,
+  venue_type  text not null check (venue_type in (&#x27;journal&#x27;,&#x27;journal_legacy&#x27;,&#x27;conference_domestic&#x27;,&#x27;conference_intl&#x27;,&#x27;magazine&#x27;,&#x27;education&#x27;,&#x27;report&#x27;)),
+  issn_print  text,
+  issn_online text,
+  publisher   text default &#x27;대한전자공학회&#x27;,
+  indexing    text[],                          -- {&#x27;SCIE&#x27;,&#x27;SCOPUS&#x27;,&#x27;KCI&#x27;}
+  active      boolean default true,
+  successor_id int references venues(id),      -- 분과지 → 통합지
+  description text
+);
+
+create table issues (                          -- 권호 / 학술대회 1회차
+  id          serial primary key,
+  venue_id    int not null references venues(id),
+  volume      text,
+  number      text,
+  year        smallint not null,
+  month       smallint,
+  title       text,                            -- &#x27;2025년도 하계학술대회 논문집&#x27;
+  event_start date,
+  event_end   date,
+  location    text,
+  cover_url   text,
+  paper_count int default 0,
+  unique (venue_id, volume, number, year)
+);
+
+create table sessions (                        -- 학술대회 세션/트랙 (DBpia에 없는 구조)
+  id          serial primary key,
+  issue_id    int not null references issues(id) on delete cascade,
+  society_id  smallint references societies(id),
+  track       text,                            -- &#x27;반도체 소자&#x27;, &#x27;AI 신호처리&#x27;
+  code        text,                            -- &#x27;SD-3&#x27;
+  title       text not null,
+  chair       text,
+  room        text,
+  start_at    timestamptz,
+  end_at      timestamptz,
+  type        text check (type in (&#x27;oral&#x27;,&#x27;poster&#x27;,&#x27;invited&#x27;,&#x27;keynote&#x27;,&#x27;tutorial&#x27;,&#x27;panel&#x27;))
+);
+
+-- =========================================================
+-- 3. 논문 (핵심)
+-- =========================================================
+create table papers (
+  id              bigserial primary key,
+  uuid            uuid unique default gen_random_uuid(),
+  issue_id        int references issues(id),
+  session_id      int references sessions(id),
+  venue_id        int not null references venues(id),
+  doi             text unique,
+  legacy_ids      jsonb default &#x27;{}&#x27;,          -- {&quot;dbpia&quot;:&quot;NODE123&quot;,&quot;kci&quot;:&quot;ART00..&quot;,&quot;koreascience&quot;:&quot;..&quot;}
+  title_ko        text,
+  title_en        text,
+  abstract_ko     text,
+  abstract_en     text,
+  keywords_ko     text[],
+  keywords_en     text[],
+  language        text default &#x27;ko&#x27;,
+  page_start      text,
+  page_end        text,
+  page_count      smallint,
+  published_at    date,
+  presented_at    timestamptz,
+  presentation    text check (presentation in (&#x27;oral&#x27;,&#x27;poster&#x27;,&#x27;invited&#x27;,&#x27;keynote&#x27;)),
+  award           text,                        -- &#x27;우수논문상&#x27;, &#x27;Best Paper&#x27;
+  oa_status       text default &#x27;closed&#x27; check (oa_status in (&#x27;diamond&#x27;,&#x27;gold&#x27;,&#x27;green&#x27;,&#x27;embargo&#x27;,&#x27;closed&#x27;)),
+  embargo_until   date,
+  fulltext_key    text,                        -- R2 object key
+  fulltext_pages  smallint,
+  fulltext_status text default &#x27;none&#x27; check (fulltext_status in (&#x27;none&#x27;,&#x27;scanned&#x27;,&#x27;ocr&#x27;,&#x27;born_digital&#x27;,&#x27;parsed&#x27;)),
+  has_figures     boolean default false,
+  has_tables      boolean default false,
+  has_code_link   boolean default false,
+  subject_ids     int[],
+  citation_count  int default 0,               -- 통합(내부+Crossref+OpenAlex)
+  internal_cited  int default 0,
+  view_count      int default 0,
+  download_count  int default 0,
+  ai_summary_ready boolean default false,
+  search_vector   tsvector,
+  quality_flags   jsonb default &#x27;{}&#x27;,          -- {&quot;missing_abstract&quot;:true,...}
+  created_at      timestamptz default now(),
+  updated_at      timestamptz default now()
+);
+create index on papers (venue_id, published_at desc);
+create index on papers (issue_id);
+create index on papers using gin (search_vector);
+create index on papers using gin (keywords_ko);
+create index on papers using gin (subject_ids);
+create index on papers using gin (title_ko gin_trgm_ops);
+create index on papers using gin (title_en gin_trgm_ops);
+
+create or replace function papers_tsv_update() returns trigger language plpgsql as $$
+begin
+  new.search_vector :=
+    setweight(to_tsvector(&#x27;simple&#x27;, coalesce(new.title_ko,&#x27;&#x27;) || &#x27; &#x27; || coalesce(new.title_en,&#x27;&#x27;)), &#x27;A&#x27;) ||
+    setweight(to_tsvector(&#x27;simple&#x27;, array_to_string(coalesce(new.keywords_ko,&#x27;{}&#x27;),&#x27; &#x27;) || &#x27; &#x27; || array_to_string(coalesce(new.keywords_en,&#x27;{}&#x27;),&#x27; &#x27;)), &#x27;B&#x27;) ||
+    setweight(to_tsvector(&#x27;simple&#x27;, coalesce(new.abstract_ko,&#x27;&#x27;) || &#x27; &#x27; || coalesce(new.abstract_en,&#x27;&#x27;)), &#x27;C&#x27;);
+  new.updated_at := now();
+  return new;
+end $$;
+create trigger trg_papers_tsv before insert or update on papers
+for each row execute function papers_tsv_update();
+
+-- =========================================================
+-- 4. 저자 (명확화 포함)
+-- =========================================================
+create table authors (                         -- 정규화된 &quot;사람&quot;
+  id            bigserial primary key,
+  uuid          uuid unique default gen_random_uuid(),
+  name_ko       text,
+  name_en       text,
+  name_variants text[],                        -- 표기 변형
+  orcid         text unique,
+  kri_id        text,                          -- 한국연구자정보
+  email_hash    text,                          -- sha256(email) 매칭용
+  current_org_id int references organizations(id),
+  h_index       smallint,
+  paper_count   int default 0,
+  claimed_by    uuid references auth.users(id),-- 본인 인증 계정
+  claimed_at    timestamptz,
+  bio           text,
+  homepage      text,
+  created_at    timestamptz default now()
+);
+create index on authors using gin (name_ko gin_trgm_ops);
+create index on authors using gin (name_en gin_trgm_ops);
+
+create table paper_authors (                   -- 논문-저자 (원문 표기 보존)
+  paper_id      bigint references papers(id) on delete cascade,
+  author_id     bigint references authors(id),
+  position      smallint not null,
+  raw_name      text not null,                 -- 논문에 적힌 그대로
+  raw_affiliation text,
+  org_id        int references organizations(id),
+  is_corresponding boolean default false,
+  is_first      boolean default false,
+  disambiguation_score real,                   -- 명확화 신뢰도 0~1
+  primary key (paper_id, position)
+);
+create index on paper_authors (author_id);
+
+create table labs (                            -- 연구실 페이지
+  id            serial primary key,
+  slug          text unique not null,
+  name_ko       text not null,
+  name_en       text,
+  org_id        int references organizations(id),
+  pi_author_id  bigint references authors(id),
+  homepage      text,
+  description   text,
+  verified      boolean default false
+);
+create table lab_members (
+  lab_id      int references labs(id) on delete cascade,
+  author_id   bigint references authors(id),
+  role        text,                            -- pi, phd, ms, alumni
+  since_year  smallint,
+  until_year  smallint,
+  primary key (lab_id, author_id)
+);
+
+-- =========================================================
+-- 5. 참고문헌·인용
+-- =========================================================
+create table references_raw (                  -- 참고문헌 원문 파싱 결과
+  id            bigserial primary key,
+  paper_id      bigint references papers(id) on delete cascade,
+  position      smallint,
+  raw_text      text not null,
+  parsed        jsonb,                         -- {title, authors, year, venue, doi}
+  matched_doi   text,
+  matched_paper_id bigint references papers(id),  -- 내부 논문이면 연결
+  match_confidence real
+);
+create index on references_raw (paper_id);
+create index on references_raw (matched_paper_id);
+
+create table citations (                       -- 그래프 엣지 (내부+외부)
+  citing_paper_id bigint references papers(id) on delete cascade,
+  cited_paper_id  bigint references papers(id) on delete cascade,
+  cited_doi       text,                        -- 외부 논문
+  citing_doi      text,                        -- 외부에서 인용한 경우
+  source          text not null,               -- internal, crossref, openalex, semantic_scholar, kci
+  context         text,                        -- 인용 문맥 문장
+  primary key (citing_paper_id, cited_paper_id, source)
+);
+create index on citations (cited_paper_id);
+
+-- =========================================================
+-- 6. 원문 구조화 (멀티모달 AI용)
+-- =========================================================
+create table paper_sections (
+  id          bigserial primary key,
+  paper_id    bigint references papers(id) on delete cascade,
+  position    smallint,
+  heading     text,
+  level       smallint,
+  text        text,
+  page_from   smallint,
+  page_to     smallint
+);
+create index on paper_sections (paper_id);
+
+create table paper_chunks (                    -- RAG 청크 + 임베딩
+  id          bigserial primary key,
+  paper_id    bigint references papers(id) on delete cascade,
+  section_id  bigint references paper_sections(id),
+  chunk_index smallint,
+  chunk_type  text default &#x27;text&#x27; check (chunk_type in (&#x27;text&#x27;,&#x27;abstract&#x27;,&#x27;figure_caption&#x27;,&#x27;table&#x27;,&#x27;equation&#x27;,&#x27;reference&#x27;)),
+  content     text not null,
+  token_count smallint,
+  page        smallint,
+  bbox        real[],                          -- [x0,y0,x1,y1] 출처 하이라이트용
+  embedding   vector(1024)                     -- voyage-3 / bge-m3
+);
+create index on paper_chunks using hnsw (embedding vector_cosine_ops) with (m = 16, ef_construction = 128);
+create index on paper_chunks (paper_id, chunk_index);
+
+create table paper_figures (
+  id          bigserial primary key,
+  paper_id    bigint references papers(id) on delete cascade,
+  fig_type    text check (fig_type in (&#x27;figure&#x27;,&#x27;table&#x27;,&#x27;equation&#x27;)),
+  label       text,                            -- &#x27;Fig. 3&#x27;, &#x27;Table II&#x27;
+  caption     text,
+  page        smallint,
+  bbox        real[],
+  image_key   text,                            -- R2
+  extracted_data jsonb,                        -- 표: 행렬 JSON / 수식: latex
+  embedding   vector(1024)                     -- 캡션(+이미지) 임베딩
+);
+create index on paper_figures (paper_id);
+create index on paper_figures using hnsw (embedding vector_cosine_ops);
+
+create table paper_specs (                     -- 성능 지표 정규화 (비교표 기능)
+  id          bigserial primary key,
+  paper_id    bigint references papers(id) on delete cascade,
+  figure_id   bigint references paper_figures(id),
+  metric      text not null,                   -- power, area, frequency, snr, accuracy ...
+  value       numeric,
+  unit        text,
+  condition   text,                            -- &#x27;28nm CMOS, 1.0V&#x27;
+  confidence  real
+);
+create index on paper_specs (metric);
+
+create table paper_links (                     -- 코드/데이터셋/슬라이드/영상
+  id          bigserial primary key,
+  paper_id    bigint references papers(id) on delete cascade,
+  link_type   text check (link_type in (&#x27;code&#x27;,&#x27;dataset&#x27;,&#x27;slides&#x27;,&#x27;poster&#x27;,&#x27;video&#x27;,&#x27;preprint&#x27;,&#x27;other&#x27;)),
+  url         text not null,
+  verified    boolean default false
+);
+
+create table paper_summaries (                 -- AI 요약 캐시
+  paper_id    bigint references papers(id) on delete cascade,
+  kind        text check (kind in (&#x27;one_line&#x27;,&#x27;toc&#x27;,&#x27;method&#x27;,&#x27;easy&#x27;,&#x27;en&#x27;,&#x27;ko&#x27;,&#x27;key_points&#x27;)),
+  lang        text default &#x27;ko&#x27;,
+  content     text not null,
+  model       text,
+  created_at  timestamptz default now(),
+  primary key (paper_id, kind, lang)
+);
+
+-- =========================================================
+-- 7. 사용자·권한·구독
+-- =========================================================
+create table profiles (
+  user_id       uuid primary key references auth.users(id) on delete cascade,
+  display_name  text,
+  role          text default &#x27;user&#x27; check (role in (&#x27;user&#x27;,&#x27;member&#x27;,&#x27;editor&#x27;,&#x27;admin&#x27;)),
+  member_no     text,                          -- 학회 회원번호
+  member_valid_until date,
+  org_id        int references organizations(id),
+  author_id     bigint references authors(id),
+  orcid         text,
+  locale        text default &#x27;ko&#x27;,
+  created_at    timestamptz default now()
+);
+
+create table institutions (                    -- 기관 구독
+  id            serial primary key,
+  org_id        int references organizations(id),
+  plan          text check (plan in (&#x27;basic&#x27;,&#x27;ai&#x27;,&#x27;enterprise&#x27;)),
+  seats         int,
+  valid_from    date,
+  valid_until   date,
+  sso_config    jsonb,
+  ai_quota_month int
+);
+create table institution_ip_ranges (
+  institution_id int references institutions(id) on delete cascade,
+  cidr          cidr not null,
+  primary key (institution_id, cidr)
+);
+
+create table subscriptions (                   -- 개인 구독
+  id            bigserial primary key,
+  user_id       uuid references auth.users(id),
+  plan          text check (plan in (&#x27;free&#x27;,&#x27;member&#x27;,&#x27;pro&#x27;,&#x27;pro_ai&#x27;)),
+  status        text check (status in (&#x27;active&#x27;,&#x27;canceled&#x27;,&#x27;past_due&#x27;)),
+  period_start  timestamptz,
+  period_end    timestamptz,
+  provider      text,                          -- toss, stripe
+  provider_ref  text
+);
+
+create table purchases (                       -- 단건 구매(비회원·비구독)
+  id          bigserial primary key,
+  user_id     uuid references auth.users(id),
+  paper_id    bigint references papers(id),
+  amount      int,
+  currency    text default &#x27;KRW&#x27;,
+  paid_at     timestamptz default now(),
+  provider_ref text
+);
+
+create table api_keys (
+  id          bigserial primary key,
+  user_id     uuid references auth.users(id),
+  key_hash    text unique not null,
+  name        text,
+  tier        text default &#x27;free&#x27; check (tier in (&#x27;free&#x27;,&#x27;dev&#x27;,&#x27;business&#x27;)),
+  rate_limit_per_min int default 60,
+  monthly_quota int,
+  created_at  timestamptz default now(),
+  revoked_at  timestamptz
+);
+
+-- =========================================================
+-- 8. 개인화·커뮤니티·알림
+-- =========================================================
+create table library_folders (
+  id          bigserial primary key,
+  user_id     uuid references auth.users(id) on delete cascade,
+  name        text not null,
+  is_shared   boolean default false,
+  share_token text unique
+);
+create table library_items (
+  folder_id   bigint references library_folders(id) on delete cascade,
+  paper_id    bigint references papers(id) on delete cascade,
+  note        text,
+  tags        text[],
+  added_at    timestamptz default now(),
+  primary key (folder_id, paper_id)
+);
+
+create table follows (                         -- 저자/키워드/저널/연구실 팔로우
+  user_id     uuid references auth.users(id) on delete cascade,
+  target_type text check (target_type in (&#x27;author&#x27;,&#x27;keyword&#x27;,&#x27;venue&#x27;,&#x27;lab&#x27;,&#x27;session&#x27;)),
+  target_id   text not null,
+  created_at  timestamptz default now(),
+  primary key (user_id, target_type, target_id)
+);
+
+create table notifications (
+  id          bigserial primary key,
+  user_id     uuid references auth.users(id) on delete cascade,
+  kind        text,
+  payload     jsonb,
+  read_at     timestamptz,
+  created_at  timestamptz default now()
+);
+
+create table discussions (                     -- 논문/세션 Q&amp;A
+  id          bigserial primary key,
+  paper_id    bigint references papers(id) on delete cascade,
+  session_id  int references sessions(id),
+  parent_id   bigint references discussions(id),
+  user_id     uuid references auth.users(id),
+  body        text not null,
+  is_author_reply boolean default false,
+  upvotes     int default 0,
+  created_at  timestamptz default now(),
+  deleted_at  timestamptz
+);
+
+create table ai_conversations (
+  id          bigserial primary key,
+  user_id     uuid references auth.users(id),
+  mode        text check (mode in (&#x27;search&#x27;,&#x27;paper_qa&#x27;,&#x27;deep_research&#x27;,&#x27;compare&#x27;,&#x27;review&#x27;)),
+  title       text,
+  created_at  timestamptz default now()
+);
+create table ai_messages (
+  id          bigserial primary key,
+  conversation_id bigint references ai_conversations(id) on delete cascade,
+  role        text check (role in (&#x27;user&#x27;,&#x27;assistant&#x27;,&#x27;tool&#x27;)),
+  content     text,
+  citations   jsonb,                           -- [{paper_id, chunk_id, page, bbox}]
+  tokens_in   int,
+  tokens_out  int,
+  model       text,
+  created_at  timestamptz default now()
+);
+
+-- =========================================================
+-- 9. 이벤트 로그 (통계·랭킹)  — 월 파티션
+-- =========================================================
+create table events (
+  id          bigserial,
+  occurred_at timestamptz not null default now(),
+  user_id     uuid,
+  anon_id     text,
+  institution_id int,
+  event       text not null,                   -- view, download, search, ai_query, cite_export
+  paper_id    bigint,
+  meta        jsonb,
+  primary key (id, occurred_at)
+) partition by range (occurred_at);
+create table events_2026_10 partition of events for values from (&#x27;2026-10-01&#x27;) to (&#x27;2026-11-01&#x27;);
+
+create materialized view paper_rankings as
+select paper_id,
+       count(*) filter (where event=&#x27;view&#x27; and occurred_at &gt; now() - interval &#x27;7 days&#x27;) as views_7d,
+       count(*) filter (where event=&#x27;download&#x27; and occurred_at &gt; now() - interval &#x27;30 days&#x27;) as downloads_30d
+from events where paper_id is not null group by paper_id;
+
+-- =========================================================
+-- 10. 인제스트 작업 큐
+-- =========================================================
+create table ingest_jobs (
+  id          bigserial primary key,
+  paper_id    bigint references papers(id),
+  source_file text,
+  stage       text check (stage in (&#x27;uploaded&#x27;,&#x27;parsed&#x27;,&#x27;extracted&#x27;,&#x27;embedded&#x27;,&#x27;enriched&#x27;,&#x27;indexed&#x27;,&#x27;failed&#x27;)),
+  error       text,
+  attempts    smallint default 0,
+  created_at  timestamptz default now(),
+  updated_at  timestamptz default now()
+);
+
+-- =========================================================
+-- 11. 접근 제어 함수 + RLS (요지)
+-- =========================================================
+create or replace function can_access_fulltext(p_user uuid, p_paper bigint)
+returns boolean language sql stable as $$
+  select exists (select 1 from papers p where p.id = p_paper and p.oa_status in (&#x27;diamond&#x27;,&#x27;gold&#x27;,&#x27;green&#x27;))
+      or exists (select 1 from profiles pr where pr.user_id = p_user and pr.role in (&#x27;member&#x27;,&#x27;editor&#x27;,&#x27;admin&#x27;) and (pr.member_valid_until is null or pr.member_valid_until &gt;= current_date))
+      or exists (select 1 from subscriptions s where s.user_id = p_user and s.status=&#x27;active&#x27; and s.period_end &gt; now())
+      or exists (select 1 from purchases pu where pu.user_id = p_user and pu.paper_id = p_paper)
+      or exists (select 1 from profiles pr join institutions i on i.org_id = pr.org_id
+                 where pr.user_id = p_user and i.valid_until &gt;= current_date);
+$$;
+
+alter table papers enable row level security;
+create policy papers_public_read on papers for select using (true);
+alter table library_folders enable row level security;
+create policy lib_owner on library_folders for all using (auth.uid() = user_id);
+alter table library_items enable row level security;
+create policy lib_items_owner on library_items for all
+  using (exists (select 1 from library_folders f where f.id = folder_id and f.user_id = auth.uid()));
+alter table ai_conversations enable row level security;
+create policy ai_owner on ai_conversations for all using (auth.uid() = user_id);
+
+-- 시드: 소사이어티
+insert into societies (code,name_ko,name_en) values
+(&#x27;COMM&#x27;,&#x27;통신&#x27;,&#x27;Communications&#x27;),(&#x27;SEMI&#x27;,&#x27;반도체&#x27;,&#x27;Semiconductor&#x27;),(&#x27;COMP&#x27;,&#x27;컴퓨터&#x27;,&#x27;Computer&#x27;),
+(&#x27;AISP&#x27;,&#x27;인공지능신호처리&#x27;,&#x27;AI Signal Processing&#x27;),(&#x27;SYSC&#x27;,&#x27;시스템및제어&#x27;,&#x27;Systems and Control&#x27;),(&#x27;INDE&#x27;,&#x27;산업전자&#x27;,&#x27;Industrial Electronics&#x27;);
+</code></pre></details></section>
+</main></div>
+<script>
+// 활성 목차 하이라이트
+const links=[...document.querySelectorAll('nav a')],secs=[...document.querySelectorAll('main section')];
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id))}})},{rootMargin:'-10% 0px -80% 0px'});
+secs.forEach(s=>io.observe(s));
+// CSV 표 필터
+document.querySelectorAll('input.filter').forEach(inp=>{inp.addEventListener('input',()=>{const q=inp.value.toLowerCase();document.querySelectorAll('#'+inp.dataset.target+' tbody tr').forEach(tr=>{tr.style.display=tr.textContent.toLowerCase().includes(q)?'':'none'})})});
+// 모바일: 링크 클릭 시 목차 닫기
+links.forEach(l=>l.addEventListener('click',()=>document.querySelector('nav').classList.remove('open')));
+</script></body></html>

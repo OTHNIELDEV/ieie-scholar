@@ -1,0 +1,51 @@
+no,title_ko,title_en,group,status,language,note
+1,대한전자공학회 학술대회,IEIE Conference (Summer/Fall),conference_domestic,active,ko,2025 하계 1326편 / 추계 458편
+2,전자공학회지,Journal of IEIE (magazine),magazine,active,ko,해설·동향
+3,전자공학회논문지-TC,J-IEIE Telecommunications,journal_legacy,merged,ko,통신 분과
+4,대한전자공학회 기타 간행물,IEIE Misc Publications,report,irregular,ko,
+5,전자공학회논문지-SP,J-IEIE Signal Processing,journal_legacy,merged,ko,신호처리 분과
+6,전자공학회논문지-SC,J-IEIE System & Control,journal_legacy,merged,ko,시스템제어 분과
+7,전자공학회논문지-CI,J-IEIE Computer & Information,journal_legacy,merged,ko,컴퓨터 분과
+8,전자공학회논문지-SD,J-IEIE Semiconductor & Devices,journal_legacy,merged,ko,반도체 분과
+9,전자공학회잡지,IEIE Magazine,magazine,legacy,ko,
+10,대한전자공학회 단기강좌,IEIE Short Course,education,irregular,ko,
+11,대한전자공학회 포럼,IEIE Forum,education,irregular,ko,
+12,컴퓨터 기술,Computer Technology,magazine,legacy,ko,
+13,ICONIP,International Conference On Neural Information Processing,conference_intl,legacy,en,
+14,대한전자공학회 세미나,IEIE Seminar,education,irregular,ko,
+15,KITE JOURNAL OF ELECTRONICS ENGINEERING,KITE Journal of Electronics Engineering,journal_legacy,legacy,en,구 영문지
+16,대한전자공학회 심포지엄 논문집,IEIE Symposium Proceedings,conference_domestic,irregular,ko,
+17,대한전자공학회 워크샵,IEIE Workshop,conference_domestic,irregular,ko,
+18,ITC-CSCC,International Technical Conference on Circuits Systems Computers and Communications,conference_intl,active,en,2027 부산
+19,CDMA International Conference and Exhibition,CDMA International Conference,conference_intl,legacy,en,
+20,CAD 및 VLSI 설계연구회지,Journal of CAD & VLSI Design Research Group,magazine,legacy,ko,
+21,ICVC,International Conference on VLSI and CAD,conference_intl,legacy,en,
+22,TENCON 87,TENCON 87 Computers and Communications Technology Toward 2000,conference_intl,legacy,en,
+23,JC-CNSS,Joint Conference on Communications Networks and Switching Systems,conference_intl,legacy,en,
+24,대한전자공학회 기술강좌,IEIE Technical Lecture,education,irregular,ko,
+25,대한전자공학회 연구보고서,IEIE Research Report,report,irregular,ko,
+26,대한전자공학회 전기통신학술연구과제,IEIE Telecom Research Project,report,legacy,ko,
+27,전자공학회논문지,Journal of IEIE (Transactions),journal,active,ko,KCI 우수등재 통합지
+28,전자공학회논문지-A,J-IEIE A,journal_legacy,legacy,ko,
+29,전자공학회논문지-B,J-IEIE B,journal_legacy,legacy,ko,
+30,전자공학회논문지-C,J-IEIE C,journal_legacy,legacy,ko,
+31,전자공학회논문지-D,J-IEIE D,journal_legacy,legacy,ko,
+32,전자공학회논문지-S,J-IEIE S,journal_legacy,legacy,ko,
+33,전자공학회논문지-T,J-IEIE T,journal_legacy,legacy,ko,
+34,전자공학회논문지-IE,J-IEIE Industrial Electronics,journal_legacy,merged,ko,산업전자 분과
+35,대한전자공학회 토론회,IEIE Panel Discussion,education,irregular,ko,
+36,대한전자공학회 연구과제,IEIE Research Project,report,irregular,ko,
+37,대한전자공학회 특별강연회,IEIE Special Lecture,education,irregular,ko,
+38,특정연구 결과 발표회 논문집,Special Research Results Presentation,conference_domestic,legacy,ko,
+39,대한전자공학회 학술강좌 요약,IEIE Lecture Summary,education,legacy,ko,
+40,JTC-CSCC,Joint Technical Conference on Circuits Systems Computers and Communications,conference_intl,legacy,en,ITC-CSCC 전신
+41,IEEE Region 10 Conference,IEEE Region 10 Conference,conference_intl,legacy,en,
+42,International Conference on Electronics Informations and Communications,ICEIC (early name),conference_intl,legacy,en,
+43,ICEIC,International Conference on Electronics Information and Communication,conference_intl,active,en,2027 후쿠오카
+44,CAD기술특강,CAD Technology Special Lecture,education,legacy,ko,
+45,Advanced and Future Microelectronics Workshop,Advanced Packaging Technology Workshop,conference_intl,legacy,en,
+46,JOURNAL OF SEMICONDUCTOR TECHNOLOGY AND SCIENCE,JSTS,journal,active,en,SCIE/SCOPUS/KCI
+47,텔레콤,Telecom,magazine,legacy,ko,
+48,JUCT,Journal of Ubiquitous Convergence Technology,journal_legacy,legacy,en,
+49,대한전자공학회 ISOCC,International SoC Design Conference,conference_intl,active,en,반도체
+50,IEIE Transactions on Smart Processing & Computing,IEIE SPC,journal,active,en,SCOPUS/KCI
