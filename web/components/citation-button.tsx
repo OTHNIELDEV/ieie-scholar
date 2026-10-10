@@ -1,8 +1,11 @@
 'use client';
-import { useState } from 'react';
-import { Quote } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Check, Copy, Quote, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type P = { title: string; authors: string[]; venue: string; year?: number; pages?: string; doi?: string | null; url: string };
+
+const COPIED_RESET_MS = 2000;
 
 export function citationFormats(p: P) {
   const a = p.authors.join(', ');
@@ -16,18 +19,49 @@ export function citationFormats(p: P) {
 
 export function CitationButton(p: P) {
   const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [fmt, setFmt] = useState<keyof ReturnType<typeof citationFormats>>('IEEE');
+  const root = useRef<HTMLDivElement>(null);
   const f = citationFormats(p);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    const onPointer = (e: PointerEvent) => !root.current?.contains(e.target as Node) && setOpen(false);
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('pointerdown', onPointer);
+    return () => { window.removeEventListener('keydown', onKey); window.removeEventListener('pointerdown', onPointer); };
+  }, [open]);
+
+  async function copy() {
+    await navigator.clipboard.writeText(f[fmt]);
+    setCopied(true);
+    setTimeout(() => setCopied(false), COPIED_RESET_MS);
+  }
+
   return (
-    <div className="relative">
-      <button onClick={() => setOpen(!open)} className="btn"><Quote className="w-4 h-4" /> 인용</button>
+    <div ref={root} className="relative">
+      <button onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="citation-panel" className="btn"><Quote className="h-4 w-4" aria-hidden="true" /> 인용하기</button>
       {open && (
-        <div className="absolute z-10 mt-2 w-[28rem] max-w-[90vw] rounded-lg border bg-white dark:bg-gray-900 p-3 shadow-lg">
-          <div className="flex gap-1 mb-2">{(Object.keys(f) as (keyof typeof f)[]).map((k) => (
-            <button key={k} onClick={() => setFmt(k)} className={`px-2 py-0.5 text-xs rounded ${fmt === k ? 'bg-brand-500 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>{k}</button>
-          ))}</div>
-          <pre className="text-xs whitespace-pre-wrap break-words bg-gray-50 dark:bg-gray-800 p-2 rounded">{f[fmt]}</pre>
-          <button onClick={() => navigator.clipboard.writeText(f[fmt])} className="mt-2 text-xs text-brand-600">클립보드 복사</button>
+        // 모바일·소형 태블릿: 화면 하단 시트 / md 이상: 버튼 아래 팝오버
+        <div id="citation-panel" role="dialog" aria-label="인용 형식"
+          className="shadow-pop fixed inset-x-3 bottom-3 z-40 rounded-xl border border-line bg-surface p-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:absolute md:inset-x-auto md:bottom-auto md:left-0 md:mt-2 md:w-[30rem] md:max-w-[calc(100vw-2rem)] md:rounded-lg md:pb-4">
+          <div className="flex items-center gap-1 border-b border-line pb-3" role="tablist" aria-label="인용 형식">
+            {(Object.keys(f) as (keyof typeof f)[]).map((k) => (
+              <button key={k} role="tab" aria-selected={fmt === k} onClick={() => { setFmt(k); setCopied(false); }}
+                className={cn('rounded-md px-2.5 py-1 text-xs font-medium transition-colors duration-150 [@media(pointer:coarse)]:py-2', fmt === k ? 'bg-ink text-paper' : 'text-muted hover:bg-sunken hover:text-ink')}>{k}</button>
+            ))}
+            <button onClick={() => setOpen(false)} aria-label="닫기" className="ml-auto inline-flex h-8 w-8 items-center justify-center rounded-md text-muted hover:bg-sunken hover:text-ink md:hidden">
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
+          <pre className="mt-3 max-h-56 overflow-auto whitespace-pre-wrap break-words rounded-md bg-sunken p-3 text-xs leading-5 text-ink">{f[fmt]}</pre>
+          <div className="mt-3 flex items-center justify-end gap-3">
+            <span aria-live="polite" className="text-xs text-signal">{copied ? `${fmt} 형식을 복사했습니다` : ''}</span>
+            <button onClick={copy} className="btn h-8 text-xs">
+              {copied ? <Check className="h-3.5 w-3.5 text-signal" aria-hidden="true" /> : <Copy className="h-3.5 w-3.5" aria-hidden="true" />} 복사
+            </button>
+          </div>
         </div>
       )}
     </div>

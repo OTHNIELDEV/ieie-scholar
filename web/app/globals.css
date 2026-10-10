@@ -1,9 +1,124 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
-:root { color-scheme: light dark; }
-body { @apply bg-white text-gray-900 antialiased dark:bg-gray-950 dark:text-gray-100; }
-.prose-paper p { @apply leading-7; }
-.btn { @apply inline-flex items-center gap-1.5 rounded-md border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-800; }
-.btn-primary { @apply inline-flex items-center gap-1.5 rounded-md bg-brand-600 text-white px-3 py-1.5 text-sm hover:bg-brand-700; }
+
+/*
+ * 디자인 토큰 — RGB 채널로 두어 Tailwind 투명도(/50 등)와 함께 쓴다.
+ * 테마 우선순위: <html class="dark|light"> (사용자 선택) > prefers-color-scheme (시스템)
+ */
+@layer base {
+  :root {
+    color-scheme: light;
+    --c-paper: 246 248 251;
+    --c-surface: 255 255 255;
+    --c-sunken: 238 242 248;
+    --c-ink: 15 30 58;
+    --c-muted: 77 91 115;
+    --c-faint: 95 107 128;
+    --c-line: 221 227 236;
+    --c-line-strong: 194 204 219;
+    --c-accent: 33 72 166;
+    --c-primary: 33 72 166;
+    --c-primary-hover: 27 58 135;
+    --c-signal: 15 118 110;
+    --c-grid: 226 232 241;
+    --shadow-tint: 15 30 58;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light) {
+      color-scheme: dark;
+      --c-paper: 11 19 36;
+      --c-surface: 17 27 48;
+      --c-sunken: 22 34 58;
+      --c-ink: 228 234 243;
+      --c-muted: 160 173 194;
+      --c-faint: 132 147 172;
+      --c-line: 34 48 76;
+      --c-line-strong: 52 70 104;
+      --c-accent: 142 174 245;
+      --c-primary: 59 102 214;
+      --c-primary-hover: 82 121 222;
+      --c-signal: 45 212 191;
+      --c-grid: 24 36 61;
+      --shadow-tint: 0 0 0;
+    }
+  }
+  :root.dark {
+    color-scheme: dark;
+    --c-paper: 11 19 36;
+    --c-surface: 17 27 48;
+    --c-sunken: 22 34 58;
+    --c-ink: 228 234 243;
+    --c-muted: 160 173 194;
+    --c-faint: 132 147 172;
+    --c-line: 34 48 76;
+    --c-line-strong: 52 70 104;
+    --c-accent: 142 174 245;
+    --c-primary: 59 102 214;
+    --c-primary-hover: 82 121 222;
+    --c-signal: 45 212 191;
+    --c-grid: 24 36 61;
+    --shadow-tint: 0 0 0;
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+  /* 한국어는 어절 단위로 줄바꿈하고, 긴 URL·DOI 만 강제로 끊는다 */
+  body { @apply bg-paper text-ink antialiased; word-break: keep-all; overflow-wrap: anywhere; }
+  ::selection { @apply bg-brand-200 text-brand-950; }
+  :focus-visible { @apply outline outline-2 outline-offset-2 outline-accent; }
+  mark { @apply rounded-sm bg-amber-200/70 px-0.5 text-inherit dark:bg-amber-400/25; }
+  summary { @apply cursor-pointer; }
+  summary::-webkit-details-marker { display: none; }
+  a, button, summary, [role='button'] { touch-action: manipulation; }
+}
+
+@layer components {
+  .container-page { @apply mx-auto w-full max-w-7xl px-4 sm:px-6; }
+  .btn {
+    @apply inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-line-strong bg-surface px-3 text-sm font-medium text-ink
+      transition-colors duration-150 hover:border-accent/60 hover:bg-sunken disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-primary px-3.5 text-sm font-semibold text-white
+      transition-colors duration-150 hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  /* 터치 기기에서는 버튼을 44px 이상으로 키운다 */
+  @media (pointer: coarse) {
+    .btn, .btn-primary { @apply h-11; }
+  }
+  .link { @apply text-accent underline-offset-4 hover:underline; }
+  .link-quiet { @apply transition-colors duration-150 hover:text-accent; }
+  .title-serif { @apply font-serif font-semibold tracking-[-0.01em] text-ink; }
+  .section-title { @apply text-[15px] font-semibold text-ink; }
+  .num { font-variant-numeric: tabular-nums; }
+  .prose-paper p { @apply leading-[1.85]; }
+  .shadow-pop { box-shadow: 0 16px 40px -12px rgb(var(--shadow-tint) / 0.3); }
+  .shadow-lift { box-shadow: 0 1px 2px rgb(var(--shadow-tint) / 0.06), 0 8px 24px -12px rgb(var(--shadow-tint) / 0.18); }
+
+  /* 히어로 — 오실로스코프 모눈 */
+  .scope-grid {
+    background-image:
+      linear-gradient(rgb(var(--c-grid)) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--c-grid)) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+    mask-image: linear-gradient(to bottom, black 55%, transparent);
+  }
+}
+
+@layer utilities {
+  .trace-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: trace-draw 1.6s cubic-bezier(0.3, 0.7, 0.2, 1) 0.15s forwards; }
+  @keyframes trace-draw { to { stroke-dashoffset: 0; } }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .trace-draw { stroke-dashoffset: 0; animation: none; }
+}
+
+/* 인쇄 시에는 테마와 무관하게 흰 종이 위 검은 글씨로 */
+@media print {
+  .no-print { display: none !important; }
+  /* :not(.x) 로 다크 규칙과 같은 명시도를 맞추고, 뒤에 와서 이긴다 */
+  :root:not(.__print) { color-scheme: light; --c-paper: 255 255 255; --c-surface: 255 255 255; --c-ink: 0 0 0; --c-muted: 60 60 60; }
+}

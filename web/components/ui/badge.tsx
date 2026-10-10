@@ -1,10 +1,10 @@
 import { cn } from '@/lib/utils';
 const tones = {
-  gray: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-  green: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
-  amber: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
-  blue: 'bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-100',
+  gray: 'border-line-strong/70 bg-sunken text-muted',
+  green: 'border-emerald-300/60 bg-emerald-50 text-emerald-800 dark:border-emerald-400/25 dark:bg-emerald-400/10 dark:text-emerald-300',
+  amber: 'border-amber-300/70 bg-amber-50 text-amber-900 dark:border-amber-400/25 dark:bg-amber-400/10 dark:text-amber-300',
+  blue: 'border-brand-200 bg-brand-50 text-brand-700 dark:border-brand-400/25 dark:bg-brand-400/10 dark:text-brand-200',
 };
 export function Badge({ children, tone = 'gray', className }: { children: React.ReactNode; tone?: keyof typeof tones; className?: string }) {
-  return <span className={cn('inline-block rounded px-1.5 py-0.5 text-[11px] font-medium', tones[tone], className)}>{children}</span>;
+  return <span className={cn('inline-flex items-center gap-1 rounded border px-1.5 py-px text-xs font-medium leading-5', tones[tone], className)}>{children}</span>;
 }
